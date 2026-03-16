@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# lf preview script
+# Args: file  width  height  x  y
+FILE="$1"
+W="$2"
+H="$3"
+X="$4"
+Y="$5"
+
+MIME=$(file --mime-type -b "$FILE")
+
+case "$MIME" in
+    # ── Images: kitty icat protocol ──────────────────────────────────────────
+    image/*)
+        kitty +kitten icat \
+            --silent \
+            --stdin no \
+            --transfer-mode memory \
+            --place "${W}x${H}@${X}x${Y}" \
+            "$FILE" </dev/null >/dev/tty
+        exit 1   # exit 1 = let lf know we drew directly to terminal
+        ;;
+
+    # ── Video: thumbnail via ffmpeg if available ──────────────────────────────
+    video/*)
+        THUMB="/tmp/lf-preview-$(basename "$FILE").jpg"
+        if command -v ffmpegthumbnailer >/dev/null 2>&1; then
+            ffmpegthumbnailer -i "$FILE" -o "$THUMB" -s 0 -q 5 2>/dev/null
+            kitty +kitten icat \
+                --silent --stdin no --transfer-mode memory \
+                --place "${W}x${H}@${X}x${Y}" \
+                "$THUMB" </dev/null >/dev/tty
+            exit 1
+        else
+            echo "video: $MIME"
+            echo "install ffmpegthumbnailer for thumbnails"
+        fi
+        ;;
+
+    # ── PDF: first page as text ───────────────────────────────────────────────
+    application/pdf)
+        if command -v pdftotext >/dev/null 2>&1; then
+            pdftotext -l 3 -nopgbrk "$FILE" - 2>/dev/null
+        else
+            echo "pdf preview: install poppler"
+        fi
+        ;;
+
+    # ── Archives ─────────────────────────────────────────────────────────────
+    application/zip)
+        unzip -l "$FILE" 2>/dev/null | tail -n +4 | head -100
+        ;;
+    application/x-tar|application/gzip|application/x-bzip2|application/x-xz|application/zstd)
+        tar tf "$FILE" 2>/dev/null | head -100
+        ;;
+    application/x-7z-compressed)
+        7z l "$FILE" 2>/dev/null | tail -n +12 | head -100
+        ;;
+    application/x-rar)
+        unrar l "$FILE" 2>/dev/null | head -100
+        ;;
+
+    # ── Text / code ───────────────────────────────────────────────────────────
+    text/*|application/json|application/x-sh|application/xml|inode/x-empty)
+        if command -v bat >/dev/null 2>&1; then
+            bat --color=always --style=numbers --line-range=":200" "$FILE"
+        else
+            head -200 "$FILE"
+        fi
+        ;;
+
+    # ── Fallback ──────────────────────────────────────────────────────────────
+    *)
+        echo "type: $MIME"
+        echo "size: $(du -sh "$FILE" | cut -f1)"
+        ;;
+esac
+exit 0

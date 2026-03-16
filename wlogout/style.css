@@ -1,0 +1,78 @@
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    background-image: none;
+}
+
+window {
+    background: rgba(10, 10, 15, 0.92);
+}
+
+button {
+    color: #e0e0e0;
+    background: rgba(30, 30, 40, 0.85);
+    border: 2px solid rgba(51, 204, 255, 0.15);
+    border-radius: 16px;
+    margin: 10px;
+    padding: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 48px;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+button:focus,
+button:hover {
+    background-color: rgba(51, 204, 255, 0.12);
+    border-color: #33ccff;
+    color: #33ccff;
+    outline: none;
+}
+
+button:active,
+button:active:hover {
+    background-color: rgba(0, 255, 153, 0.2);
+    border-color: #00ff99;
+    color: #00ff99;
+}
+
+/* Individual button icons */
+#lock {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+}
+#lock:hover {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
+}
+
+#hibernate {
+    background-image: image(url("/usr/share/wlogout/icons/hibernate.png"));
+}
+
+#reboot {
+    background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
+}
+
+#shutdown {
+    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
+}
+
+/* Shutdown gets red accent to stand out */
+#shutdown:hover {
+    background-color: rgba(255, 68, 102, 0.2);
+    border-color: #ff4466;
+    color: #ff4466;
+}
+
+#reboot:hover {
+    background-color: rgba(255, 170, 0, 0.15);
+    border-color: #ffaa00;
+    color: #ffaa00;
+}

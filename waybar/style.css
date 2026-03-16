@@ -1,0 +1,183 @@
+/* ── Variables ─────────────────────────────────────────────────────────────── */
+/* Matches Hyprland border gradient: #33ccff → #00ff99, inactive: #595959 */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 7 Free", monospace;
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+/* ── Bar ───────────────────────────────────────────────────────────────────── */
+
+window#waybar {
+    background: rgba(15, 15, 20, 0.85);
+    color: #e0e0e0;
+    border-radius: 10px;
+}
+
+/* ── Workspaces ────────────────────────────────────────────────────────────── */
+
+#workspaces {
+    background: rgba(30, 30, 40, 0.9);
+    border-radius: 10px;
+    padding: 0 4px;
+    margin: 4px 0;
+}
+
+#workspaces button {
+    padding: 2px 10px;
+    color: #595959;
+    background: transparent;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    color: #33ccff;
+    background: rgba(51, 204, 255, 0.1);
+}
+
+#workspaces button.active {
+    color: #0f0f14;
+    background: linear-gradient(45deg, #33ccff, #00ff99);
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    color: #0f0f14;
+    background: #ff4466;
+}
+
+/* ── Window title ──────────────────────────────────────────────────────────── */
+
+#window {
+    padding: 0 12px;
+    color: #888;
+    font-style: italic;
+}
+
+/* ── Shared pill style for right modules ───────────────────────────────────── */
+
+#clock,
+#battery,
+#network,
+#network.traffic,
+#pulseaudio,
+#backlight,
+#mpris,
+#tray {
+    padding: 0 12px;
+    margin: 4px 2px;
+    border-radius: 10px;
+    background: rgba(30, 30, 40, 0.9);
+    color: #e0e0e0;
+    transition: background 0.2s ease;
+}
+
+/* ── Clock ─────────────────────────────────────────────────────────────────── */
+
+#clock {
+    color: #33ccff;
+    background: rgba(51, 204, 255, 0.12);
+    font-weight: bold;
+}
+
+/* ── Battery ───────────────────────────────────────────────────────────────── */
+
+#battery {
+    color: #00ff99;
+}
+
+#battery.charging {
+    color: #33ccff;
+}
+
+#battery.warning:not(.charging) {
+    color: #ffaa00;
+}
+
+#battery.critical:not(.charging) {
+    color: #ff4466;
+    animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+/* ── Network ───────────────────────────────────────────────────────────────── */
+
+#network {
+    color: #00ff99;
+}
+
+#network.disconnected {
+    color: #595959;
+}
+
+/* ── Network traffic ───────────────────────────────────────────────────────── */
+
+#network.traffic {
+    color: #00ff99;
+    font-size: 11px;
+}
+
+/* ── Audio ─────────────────────────────────────────────────────────────────── */
+
+#pulseaudio {
+    color: #33ccff;
+}
+
+#pulseaudio.muted {
+    color: #595959;
+}
+
+/* ── Backlight ─────────────────────────────────────────────────────────────── */
+
+#backlight {
+    color: #ffe066;
+}
+
+/* ── Media player ──────────────────────────────────────────────────────────── */
+
+#mpris {
+    color: #cc88ff;
+    font-style: italic;
+}
+
+#mpris.paused {
+    color: #595959;
+}
+
+/* ── Power button ──────────────────────────────────────────────────────────── */
+
+#custom-power {
+    padding: 0 14px;
+    margin: 4px 2px;
+    border-radius: 10px;
+    background: rgba(255, 68, 102, 0.15);
+    color: #ff4466;
+    font-size: 15px;
+    transition: background 0.2s ease;
+}
+
+#custom-power:hover {
+    background: rgba(255, 68, 102, 0.35);
+}
+
+/* ── Tray ──────────────────────────────────────────────────────────────────── */
+
+#tray {
+    padding: 0 8px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background: rgba(255, 68, 102, 0.2);
+}

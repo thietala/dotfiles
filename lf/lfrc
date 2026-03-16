@@ -1,0 +1,151 @@
+# ── General ───────────────────────────────────────────────────────────────────
+set shell bash
+set shellopts '-eu'
+set ifs "\n"
+set scrolloff 5
+set icons true
+set period 1
+set hidden true
+set ignorecase true
+set smartcase true
+set incsearch true
+set preview true
+set previewer ~/.config/lf/preview
+set cleaner  ~/.config/lf/cleaner
+
+# ── Appearance ────────────────────────────────────────────────────────────────
+set ratios 1:2:3
+set drawbox true
+set borderfmt "\033[38;2;100;200;200m"   # cyan border, matches Hyprland accent
+
+# ── Open files ────────────────────────────────────────────────────────────────
+cmd open &{{
+    case $(file --mime-type -b "$f") in
+        image/*)
+            gwenview "$f" >/dev/null 2>&1 &
+            ;;
+        video/*|audio/*)
+            vlc "$f" >/dev/null 2>&1 &
+            ;;
+        application/pdf)
+            xdg-open "$f" >/dev/null 2>&1 &
+            ;;
+        text/*|application/json|application/x-sh|inode/x-empty)
+            $EDITOR "$f"
+            ;;
+        *)
+            xdg-open "$f" >/dev/null 2>&1 &
+            ;;
+    esac
+}}
+
+# ── Archive helpers ────────────────────────────────────────────────────────────
+cmd extract ${{
+    set -f
+    case "$f" in
+        *.tar.bz2)  tar xjf "$f"     ;;
+        *.tar.gz)   tar xzf "$f"     ;;
+        *.tar.xz)   tar xJf "$f"     ;;
+        *.tar.zst)  tar --zstd -xf "$f" ;;
+        *.tar)      tar xf  "$f"     ;;
+        *.zip)      unzip   "$f"     ;;
+        *.7z)       7z x    "$f"     ;;
+        *.rar)      unrar x "$f"     ;;
+        *) echo "unsupported format" ;;
+    esac
+}}
+
+cmd zip %{{
+    zip -r "$f.zip" "$f"
+    echo "zipped → $f.zip"
+}}
+
+# ── Trash (safer than rm) ──────────────────────────────────────────────────────
+cmd trash %{{
+    printf "trash %s? [y/N] " "$(basename "$f")"
+    read ans
+    [ "$ans" = "y" ] && gio trash "$f" && echo "trashed"
+}}
+
+cmd trash-empty %{{
+    printf "empty trash? [y/N] "
+    read ans
+    [ "$ans" = "y" ] && gio trash --empty
+}}
+
+# ── Paste with progress ────────────────────────────────────────────────────────
+cmd paste-progress &{{
+    load=$(lf -remote 'load')
+    mode=$(echo "$load" | sed -n '1p')
+    list=$(echo "$load" | sed -n '2,$p')
+    if [ "$mode" = "copy" ]; then
+        rsync --progress -av $list . 2>&1 | tail -1 &&
+        lf -remote "send $id echo 'copied'"
+    else
+        mv $list . &&
+        lf -remote "send $id echo 'moved'"
+    fi
+    lf -remote 'send load'
+    lf -remote 'send clear'
+}}
+
+# ── Bulk rename ───────────────────────────────────────────────────────────────
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    [ -n "$fs" ] && echo "$fs" > "$old" || ls > "$old"
+    $EDITOR "$old"
+    cp "$old" "$new"
+    $EDITOR "$new"
+    paste "$old" "$new" | while IFS=$'\t' read src dst; do
+        [ "$src" != "$dst" ] && mv -- "$src" "$dst"
+    done
+    rm "$old" "$new"
+    lf -remote "send $id unselect"
+}}
+
+# ── New file / folder ──────────────────────────────────────────────────────────
+cmd mkfile ${{
+    printf "filename: "
+    read name
+    touch "$name"
+}}
+
+cmd mkdir ${{
+    printf "directory name: "
+    read name
+    mkdir -p "$name"
+}}
+
+# ── Bookmarks / jump ──────────────────────────────────────────────────────────
+map gh cd ~
+map gd cd ~/Downloads
+map gc cd ~/.config
+map gp cd ~/Documents
+map gm cd /mnt              # local mounts
+
+# SMB shares — fill in your server details:
+map gs cd /mnt/mercury/data        # example: sudo mount -t cifs //SERVER/SHARE /mnt/nas ...
+
+# ── Keybindings ───────────────────────────────────────────────────────────────
+map <enter> open
+map x       cut
+map y       copy
+map p       paste-progress
+map d       trash
+map D       trash-empty
+map r       rename
+map R       bulk-rename
+map a       mkfile
+map A       mkdir
+map e       extract
+map z       zip
+map .       set hidden!             # toggle hidden files
+map <c-r>   reload
+map <c-f>   push :filter<space>    # fuzzy-ish filter
+map <c-l>   clear
+
+map i $LESS='-R' bat --color=always --paging=always "$f" 2>/dev/null || less "$f"
+
+# Quick edit config
+map C $${EDITOR:-nvim} ~/.config/lf/lfrc && lf -remote "send $id source ~/.config/lf/lfrc"
