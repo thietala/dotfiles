@@ -1,0 +1,18 @@
+{
+  "name": "purple-glass",
+  "displayName": "Purple Glass",
+  "description": "Deep desaturated royal purple glass theme",
+  "version": "1.0.0",
+  "publisher": "marras",
+  "engines": { "vscode": "^1.60.0" },
+  "categories": ["Themes"],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Purple Glass",
+        "uiTheme": "vs-dark",
+        "path": "./themes/purple-glass-color-theme.json"
+      }
+    ]
+  }
+}

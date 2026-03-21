@@ -4,13 +4,13 @@
 }
 
 window {
-    background: rgba(10, 10, 15, 0.92);
+    background: rgba(26, 14, 56, 0.85);
 }
 
 button {
-    color: #e0e0e0;
-    background: rgba(30, 30, 40, 0.85);
-    border: 2px solid rgba(51, 204, 255, 0.15);
+    color: #e8e0f0;
+    background: rgba(35, 18, 72, 0.75);
+    border: 1px solid rgba(110, 85, 150, 0.35);
     border-radius: 16px;
     margin: 10px;
     padding: 20px;
@@ -23,17 +23,17 @@ button {
 
 button:focus,
 button:hover {
-    background-color: rgba(51, 204, 255, 0.12);
-    border-color: #33ccff;
-    color: #33ccff;
+    background-color: rgba(110, 85, 150, 0.25);
+    border-color: #9b7bc4;
+    color: #e8e0f0;
     outline: none;
 }
 
 button:active,
 button:active:hover {
-    background-color: rgba(0, 255, 153, 0.2);
-    border-color: #00ff99;
-    color: #00ff99;
+    background-color: rgba(155, 123, 196, 0.35);
+    border-color: #b89edd;
+    color: #b89edd;
 }
 
 /* Individual button icons */
@@ -64,15 +64,15 @@ button:active:hover {
     background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
 }
 
-/* Shutdown gets red accent to stand out */
+/* Shutdown red accent to signal danger */
 #shutdown:hover {
-    background-color: rgba(255, 68, 102, 0.2);
-    border-color: #ff4466;
-    color: #ff4466;
+    background-color: rgba(255, 180, 171, 0.15);
+    border-color: #ffb4ab;
+    color: #ffb4ab;
 }
 
 #reboot:hover {
-    background-color: rgba(255, 170, 0, 0.15);
-    border-color: #ffaa00;
-    color: #ffaa00;
+    background-color: rgba(155, 123, 196, 0.20);
+    border-color: #9b7bc4;
+    color: #9b7bc4;
 }

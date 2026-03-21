@@ -1,0 +1,121 @@
+/**
+ * Rofi — compact centre launcher  (Super+R)
+ * Style inspired by z.hyprdots / zusqii
+ */
+
+configuration {
+    show-icons:             true;
+    icon-theme:             "Papirus-Dark";
+    font:                   "JetBrainsMono Nerd Font 11";
+    display-drun:           " Apps";
+    display-run:            " Run";
+    kb-cancel:              "Escape";
+    kb-remove-char-back:    "BackSpace,Shift+BackSpace";
+    kb-accept-entry:        "Return,KP_Enter";
+    click-to-exit:          true;
+    scroll-method:          0;
+}
+
+@import "colors.rasi"
+
+* {
+    background-color:               transparent;
+    text-color:                     @on-surface;
+    border-color:                   @outline;
+
+    normal-background:              transparent;
+    normal-foreground:              @on-surface;
+    alternate-normal-background:    transparent;
+    alternate-normal-foreground:    @on-surface;
+    selected-normal-background:     @primary;
+    selected-normal-foreground:     @on-primary;
+    active-background:              @primary;
+    active-foreground:              @on-primary;
+    urgent-background:              @error-container;
+    urgent-foreground:              @on-error-container;
+    selected-urgent-background:     @error-container;
+    selected-urgent-foreground:     @on-error-container;
+}
+
+window {
+    location:           center;
+    anchor:             center;
+    width:              26%;
+    background-color:   rgba(28, 14, 52, 10%);
+    border:             1px;
+    border-color:       rgba(110, 85, 150, 35%);
+    border-radius:      16px;
+    padding:            20px;
+}
+
+mainbox {
+    children:       [ inputbar, listview ];
+    spacing:        14px;
+    background-color: transparent;
+}
+
+/* ── Search bar ──────────────────────────────────────────────────────── */
+
+inputbar {
+    children:           [ prompt, entry ];
+    spacing:            10px;
+    padding:            11px 14px;
+    border-radius:      10px;
+    background-color:   rgba(45, 20, 75, 10%);
+}
+
+prompt {
+    background-color:   inherit;
+    text-color:         @on-surface-variant;
+    font:               "JetBrainsMono Nerd Font Bold 11";
+}
+
+entry {
+    placeholder:        "Search...";
+    placeholder-color:  @on-surface-variant;
+    background-color:   inherit;
+    text-color:         @on-surface;
+    cursor:             text;
+}
+
+/* ── Results list ────────────────────────────────────────────────────── */
+
+listview {
+    columns:        1;
+    lines:          5;
+    cycle:          true;
+    scrollbar:      false;
+    spacing:        6px;
+    fixed-height:   false;
+    background-color: transparent;
+}
+
+element {
+    padding:        9px 12px;
+    border-radius:  8px;
+    spacing:        10px;
+    cursor:         pointer;
+}
+
+element-icon {
+    size:               1.4em;
+    vertical-align:     0.5;
+    background-color:   transparent;
+    cursor:             inherit;
+}
+
+element-text {
+    vertical-align:     0.5;
+    background-color:   transparent;
+    text-color:         inherit;
+    highlight:          bold;
+    cursor:             inherit;
+    horizontal-align:   0;
+}
+
+element normal.normal     { background-color: transparent;  text-color: @on-surface; }
+element alternate.normal  { background-color: transparent;  text-color: @on-surface; }
+element selected.normal   { background-color: @primary;     text-color: @on-primary; }
+element selected.active   { background-color: @primary;     text-color: @on-primary; }
+element normal.urgent     { background-color: @error-container; text-color: @on-error-container; }
+element selected.urgent   { background-color: @error-container; text-color: @on-error-container; }

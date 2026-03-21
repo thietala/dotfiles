@@ -1,0 +1,11 @@
+[SddmGreeterTheme]
+Name=purple-glass
+Description=Deep desaturated royal purple glass theme
+Author=marras
+Version=1.0
+Website=
+License=MIT
+Background=
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations

@@ -1,0 +1,467 @@
+/* ── Purple Glass GTK3 theme ────────────────────────────────────────────────
+   Overrides Adwaita-dark with the purple palette
+   ────────────────────────────────────────────────────────────────────────── */
+
+@define-color theme_bg_color          #1a0e38;
+@define-color theme_fg_color          #e8e0f0;
+@define-color theme_base_color        #231248;
+@define-color theme_text_color        #e8e0f0;
+@define-color theme_selected_bg_color #9b7bc4;
+@define-color theme_selected_fg_color #1a0e38;
+@define-color insensitive_bg_color    #231248;
+@define-color insensitive_fg_color    #4a3868;
+@define-color insensitive_base_color  #1e1042;
+@define-color theme_tooltip_bg_color  #2c1558;
+@define-color theme_tooltip_fg_color  #e8e0f0;
+@define-color borders                 rgba(110, 85, 150, 0.40);
+@define-color warning_color           #c4b06b;
+@define-color error_color             #e06b6b;
+@define-color success_color           #6bc4a0;
+
+/* ── Window ─────────────────────────────────────────────────────────────── */
+window,
+.background {
+  background-color: @theme_bg_color;
+  color: @theme_fg_color;
+}
+
+/* ── Headerbar ───────────────────────────────────────────────────────────── */
+headerbar,
+.titlebar {
+  background-color: #130a2d;
+  color: @theme_fg_color;
+  border-bottom: 1px solid @borders;
+  box-shadow: none;
+  padding: 4px 8px;
+}
+
+headerbar .title {
+  color: @theme_fg_color;
+  font-weight: bold;
+}
+
+headerbar .subtitle {
+  color: #8878a8;
+  font-size: 0.85em;
+}
+
+headerbar button {
+  background-color: transparent;
+  color: #8878a8;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  box-shadow: none;
+}
+
+headerbar button:hover {
+  background-color: rgba(155, 123, 196, 0.20);
+  color: @theme_fg_color;
+  border-color: @borders;
+}
+
+headerbar button:active {
+  background-color: rgba(155, 123, 196, 0.35);
+}
+
+/* Window control buttons */
+headerbar button.titlebutton {
+  border-radius: 50%;
+  padding: 4px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────────────────── */
+toolbar {
+  background-color: #130a2d;
+  border-bottom: 1px solid @borders;
+  padding: 2px;
+}
+
+/* ── Sidebar / paned ─────────────────────────────────────────────────────── */
+.sidebar,
+stacksidebar list,
+placessidebar {
+  background-color: #160c30;
+  color: #c4b8d8;
+  border-right: 1px solid @borders;
+}
+
+.sidebar row:selected,
+stacksidebar list row:selected,
+placessidebar row:selected {
+  background-color: rgba(155, 123, 196, 0.25);
+  color: @theme_fg_color;
+}
+
+.sidebar row:hover,
+stacksidebar list row:hover,
+placessidebar row:hover {
+  background-color: rgba(155, 123, 196, 0.12);
+}
+
+/* ── List / treeview ─────────────────────────────────────────────────────── */
+treeview,
+listview,
+list {
+  background-color: @theme_base_color;
+  color: @theme_fg_color;
+}
+
+treeview:selected,
+listview row:selected,
+list row:selected {
+  background-color: @theme_selected_bg_color;
+  color: @theme_selected_fg_color;
+}
+
+treeview:hover,
+listview row:hover,
+list row:hover {
+  background-color: rgba(155, 123, 196, 0.15);
+}
+
+treeview header button {
+  background-color: #160c30;
+  color: #8878a8;
+  border-bottom: 1px solid @borders;
+  box-shadow: none;
+}
+
+/* ── Entries / inputs ────────────────────────────────────────────────────── */
+entry {
+  background-color: @theme_base_color;
+  color: @theme_fg_color;
+  border: 1px solid @borders;
+  border-radius: 8px;
+  padding: 6px 10px;
+  box-shadow: none;
+  caret-color: #9b7bc4;
+}
+
+entry:focus {
+  border-color: #9b7bc4;
+  box-shadow: 0 0 0 1px rgba(155, 123, 196, 0.4);
+}
+
+entry selection {
+  background-color: rgba(155, 123, 196, 0.35);
+  color: @theme_fg_color;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+button {
+  background-color: rgba(35, 18, 72, 0.80);
+  color: @theme_fg_color;
+  border: 1px solid @borders;
+  border-radius: 8px;
+  padding: 5px 12px;
+  box-shadow: none;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+button:hover {
+  background-color: rgba(110, 85, 150, 0.28);
+  border-color: rgba(155, 123, 196, 0.65);
+}
+
+button:active,
+button:checked {
+  background-color: rgba(155, 123, 196, 0.35);
+  border-color: #9b7bc4;
+}
+
+button.suggested-action {
+  background-color: #9b7bc4;
+  color: #1a0e38;
+  border-color: #9b7bc4;
+  font-weight: bold;
+}
+
+button.suggested-action:hover {
+  background-color: #b89edd;
+}
+
+button.destructive-action {
+  background-color: rgba(224, 107, 107, 0.20);
+  color: #e06b6b;
+  border-color: rgba(224, 107, 107, 0.50);
+}
+
+button.destructive-action:hover {
+  background-color: rgba(224, 107, 107, 0.35);
+}
+
+button:disabled {
+  background-color: @insensitive_bg_color;
+  color: @insensitive_fg_color;
+  border-color: rgba(110, 85, 150, 0.15);
+}
+
+/* ── Scale / slider (volume controls in pavucontrol) ────────────────────── */
+scale trough {
+  background-color: #2c1558;
+  border-radius: 4px;
+  border: none;
+  min-height: 4px;
+  min-width: 4px;
+}
+
+scale trough highlight,
+scale trough progress {
+  background-color: #9b7bc4;
+  border-radius: 4px;
+  border: none;
+  min-height: 4px;
+  min-width: 4px;
+}
+
+scale.horizontal trough { min-height: 4px; }
+scale.vertical   trough { min-width:  4px; }
+
+scale.horizontal trough highlight,
+scale.horizontal trough progress { min-height: 4px; border-radius: 4px 0 0 4px; }
+scale.vertical   trough highlight,
+scale.vertical   trough progress { min-width:  4px; border-radius: 4px 4px 0 0; }
+
+scale slider,
+scale slider:hover,
+scale slider:active,
+scale slider:focus,
+scale slider:focus:hover {
+  background-color: #9b7bc4 !important;
+  background-image: none !important;
+  border: 2px solid #b89edd !important;
+  border-radius: 50% !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  outline: none !important;
+  outline-width: 0 !important;
+  -gtk-outline-radius: 50% !important;
+  -gtk-icon-shadow: none !important;
+  box-shadow: 0 2px 6px rgba(10, 5, 30, 0.5) !important;
+}
+
+scale slider:hover {
+  background-color: #b89edd !important;
+}
+
+scale slider:active {
+  background-color: #c4aaee !important;
+}
+
+scale slider indicator,
+scale slider indicator:focus,
+scale slider indicator:hover {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+scale,
+scale contents,
+scale trough,
+scale trough contents {
+  outline: none !important;
+  -gtk-outline-radius: 0 !important;
+}
+
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+progressbar trough {
+  background-color: #2c1558;
+  border-radius: 4px;
+  border: none;
+}
+
+progressbar progress {
+  background-color: #9b7bc4;
+  border-radius: 4px;
+  border: none;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+scrollbar {
+  background-color: transparent;
+  border: none;
+}
+
+scrollbar slider {
+  background-color: rgba(110, 85, 150, 0.40);
+  border-radius: 4px;
+  min-width: 6px;
+  min-height: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+scrollbar slider:hover {
+  background-color: rgba(155, 123, 196, 0.65);
+}
+
+scrollbar slider:active {
+  background-color: #9b7bc4;
+}
+
+/* ── Notebook / tabs ─────────────────────────────────────────────────────── */
+notebook > header {
+  background-color: #130a2d;
+  border-bottom: 1px solid @borders;
+  padding: 0 4px;
+}
+
+notebook > header tab {
+  color: #8878a8;
+  padding: 6px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  margin: 4px 2px 0;
+}
+
+notebook > header tab:checked {
+  background-color: @theme_base_color;
+  color: @theme_fg_color;
+  border-color: @borders;
+}
+
+notebook > header tab:hover:not(:checked) {
+  background-color: rgba(155, 123, 196, 0.15);
+  color: #c4b8d8;
+}
+
+notebook > stack {
+  background-color: @theme_base_color;
+}
+
+/* ── Menus ───────────────────────────────────────────────────────────────── */
+menu,
+.menu,
+.context-menu {
+  background-color: @theme_base_color;
+  color: @theme_fg_color;
+  border: 1px solid rgba(110, 85, 150, 0.65);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 8px 32px rgba(10, 5, 30, 0.5);
+}
+
+menuitem {
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: @theme_fg_color;
+}
+
+menuitem:hover {
+  background-color: rgba(155, 123, 196, 0.25);
+}
+
+menuitem:disabled {
+  color: @insensitive_fg_color;
+}
+
+separator.horizontal,
+menu > separator {
+  background-color: @borders;
+  min-height: 1px;
+  margin: 3px 6px;
+}
+
+/* ── Checkboxes / radio buttons ──────────────────────────────────────────── */
+checkbutton check,
+radiobutton radio {
+  background-color: @theme_base_color;
+  border: 2px solid rgba(110, 85, 150, 0.65);
+  border-radius: 4px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+checkbutton check:checked,
+radiobutton radio:checked {
+  background-color: #9b7bc4;
+  border-color: #9b7bc4;
+  color: #1a0e38;
+}
+
+radiobutton radio { border-radius: 50%; }
+
+/* ── Tooltip ─────────────────────────────────────────────────────────────── */
+tooltip {
+  background-color: @theme_tooltip_bg_color;
+  color: @theme_tooltip_fg_color;
+  border: 1px solid rgba(110, 85, 150, 0.65);
+  border-radius: 8px;
+  padding: 5px 10px;
+  box-shadow: 0 4px 16px rgba(10, 5, 30, 0.4);
+}
+
+/* ── Popover ─────────────────────────────────────────────────────────────── */
+popover,
+.popover {
+  background-color: @theme_base_color;
+  border: 1px solid rgba(110, 85, 150, 0.65);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(10, 5, 30, 0.5);
+  padding: 6px;
+}
+
+/* ── Switch ──────────────────────────────────────────────────────────────── */
+switch {
+  background-color: #2c1558;
+  border: 1px solid @borders;
+  border-radius: 14px;
+  min-width: 44px;
+  min-height: 24px;
+}
+
+switch:checked {
+  background-color: #9b7bc4;
+  border-color: #9b7bc4;
+}
+
+switch slider {
+  background-color: #e8e0f0;
+  border-radius: 50%;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 2px;
+  box-shadow: 0 1px 4px rgba(10, 5, 30, 0.4);
+}
+
+/* ── Frame / separator ───────────────────────────────────────────────────── */
+frame > border,
+.frame {
+  border: 1px solid @borders;
+  border-radius: 8px;
+}
+
+separator {
+  background-color: @borders;
+  min-width: 1px;
+  min-height: 1px;
+}
+
+/* ── Statusbar ───────────────────────────────────────────────────────────── */
+statusbar {
+  background-color: #130a2d;
+  color: #8878a8;
+  border-top: 1px solid @borders;
+  font-size: 0.85em;
+}
+
+/* ── Infobar ─────────────────────────────────────────────────────────────── */
+infobar {
+  background-color: rgba(155, 123, 196, 0.15);
+  border-bottom: 1px solid @borders;
+  color: @theme_fg_color;
+}
+
+infobar.error   { background-color: rgba(224, 107, 107, 0.15); }
+infobar.warning { background-color: rgba(196, 176, 107, 0.15); }
+infobar.success { background-color: rgba(107, 196, 160, 0.15); }

@@ -1,0 +1,266 @@
+/* ── Purple Glass — userChrome.css ──────────────────────────────────────────
+   Enable in about:config:
+   toolkit.legacyUserProfileCustomizations.stylesheets = true
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:         #1a0e38;
+  --surface:    #231248;
+  --surface2:   #2c1558;
+  --primary:    #9b7bc4;
+  --text:       #e8e0f0;
+  --text-muted: #8878a8;
+  --border:     rgba(110, 85, 150, 0.35);
+  --border-hi:  rgba(110, 85, 150, 0.65);
+  --select:     rgba(155, 123, 196, 0.25);
+
+  --toolbar-bgcolor:            var(--bg)      !important;
+  --toolbar-color:              var(--text)    !important;
+  --toolbarbutton-hover-background: var(--select) !important;
+  --toolbarbutton-active-background: rgba(155,123,196,0.35) !important;
+  --tab-selected-bgcolor:       var(--surface) !important;
+  --tab-text:                   var(--text)    !important;
+  --lwt-text-color:             var(--text)    !important;
+  --lwt-toolbar-field:          var(--surface) !important;
+  --lwt-toolbar-field-color:    var(--text)    !important;
+  --lwt-toolbar-field-focus:    var(--surface2) !important;
+  --lwt-toolbar-field-focus-color: var(--text) !important;
+  --lwt-toolbar-field-border-focus: var(--primary) !important;
+  --arrowpanel-background:      var(--surface) !important;
+  --arrowpanel-color:           var(--text)    !important;
+  --arrowpanel-border-color:    var(--border)  !important;
+  --panel-shadow:               0 8px 32px rgba(10, 5, 30, 0.6) !important;
+}
+
+/* ── Window / chrome background ─────────────────────────────────────────── */
+#browser,
+#navigator-toolbox,
+#TabsToolbar,
+#nav-bar,
+#PersonalToolbar,
+#sidebar-box {
+  background-color: var(--bg) !important;
+  border-color: var(--border) !important;
+}
+
+/* Remove default borders between toolbar sections */
+#nav-bar { box-shadow: none !important; border-top: 1px solid var(--border) !important; }
+#TabsToolbar { border-bottom: 1px solid var(--border) !important; }
+
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+.tabbrowser-tab {
+  --tab-loading-fill: var(--primary) !important;
+}
+
+/* Inactive tab */
+.tabbrowser-tab:not([selected]):not([multiselected]) .tab-background {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.tabbrowser-tab:not([selected]):not([multiselected]):hover .tab-background {
+  background-color: var(--select) !important;
+  border-color: var(--border) !important;
+}
+
+/* Active tab */
+.tabbrowser-tab[selected] .tab-background {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border-hi) !important;
+  border-radius: 8px 8px 0 0 !important;
+  box-shadow: 0 0 12px rgba(155, 123, 196, 0.15) !important;
+}
+
+/* Active tab top accent line */
+.tabbrowser-tab[selected] .tab-background::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 8px; right: 8px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  border-radius: 0 0 2px 2px;
+}
+
+/* Tab text */
+.tab-label {
+  color: var(--text) !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  font-size: 12px !important;
+}
+
+.tabbrowser-tab:not([selected]) .tab-label {
+  color: var(--text-muted) !important;
+}
+
+/* Tab close button */
+.tab-close-button {
+  color: var(--text-muted) !important;
+}
+.tab-close-button:hover {
+  background-color: rgba(224, 107, 107, 0.2) !important;
+  color: #e06b6b !important;
+  border-radius: 4px !important;
+}
+
+/* New tab button */
+#tabs-newtab-button,
+.tabs-newtab-button {
+  color: var(--text-muted) !important;
+}
+#tabs-newtab-button:hover,
+.tabs-newtab-button:hover {
+  background-color: var(--select) !important;
+  border-radius: 6px !important;
+}
+
+/* ── Address / URL bar ───────────────────────────────────────────────────── */
+#urlbar {
+  --urlbar-box-bgcolor:          var(--surface)  !important;
+  --urlbar-box-focus-bgcolor:    var(--surface2) !important;
+  --urlbar-box-hover-bgcolor:    var(--surface2) !important;
+  --urlbar-box-active-bgcolor:   var(--surface2) !important;
+  --urlbar-box-text-color:       var(--text)     !important;
+}
+
+#urlbar-background {
+  background-color: var(--surface)  !important;
+  border: 1px solid var(--border)   !important;
+  border-radius: 10px               !important;
+  box-shadow: none                  !important;
+}
+
+#urlbar[focused] #urlbar-background {
+  background-color: var(--surface2) !important;
+  border-color: var(--primary)      !important;
+  box-shadow: 0 0 0 1px var(--primary), 0 4px 16px rgba(155,123,196,0.2) !important;
+}
+
+#urlbar-input {
+  color: var(--text) !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  font-size: 13px !important;
+}
+
+/* Lock icon / page action icons */
+#identity-icon,
+#page-action-buttons > .urlbar-page-action,
+#star-button {
+  color: var(--text-muted) !important;
+  fill: var(--text-muted) !important;
+}
+
+/* ── Toolbar buttons ─────────────────────────────────────────────────────── */
+toolbarbutton {
+  color: var(--text-muted) !important;
+  fill: var(--text-muted)  !important;
+  border-radius: 8px !important;
+}
+
+toolbarbutton:hover {
+  background-color: var(--select) !important;
+  color: var(--text) !important;
+  fill: var(--text)  !important;
+}
+
+toolbarbutton:active {
+  background-color: rgba(155,123,196,0.35) !important;
+}
+
+/* ── Autocomplete / URL dropdown ─────────────────────────────────────────── */
+#PopupAutoCompleteRichResult {
+  background-color: var(--surface)   !important;
+  border: 1px solid var(--border-hi) !important;
+  border-radius: 12px                !important;
+  box-shadow: 0 8px 32px rgba(10,5,30,0.5) !important;
+  margin-top: 4px                    !important;
+  padding: 4px                       !important;
+}
+
+.autocomplete-richlistitem {
+  border-radius: 8px   !important;
+  padding: 6px 10px    !important;
+  color: var(--text)   !important;
+}
+
+.autocomplete-richlistitem[selected],
+.autocomplete-richlistitem:hover {
+  background-color: var(--select) !important;
+}
+
+.ac-site-icon { margin-inline-end: 8px !important; }
+
+.ac-title {
+  color: var(--text) !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+}
+
+.ac-url {
+  color: var(--primary) !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  font-size: 11px !important;
+}
+
+/* ── Hamburger menu / panels ─────────────────────────────────────────────── */
+panelmultiview,
+#appMenu-popup,
+.panel-arrowcontent {
+  background-color: var(--surface)   !important;
+  border: 1px solid var(--border-hi) !important;
+  border-radius: 12px                !important;
+  color: var(--text)                 !important;
+}
+
+toolbarseparator,
+menuseparator {
+  background-color: var(--border) !important;
+  border-color: var(--border)     !important;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+#sidebar-header {
+  background-color: var(--bg)     !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-muted)        !important;
+}
+
+#sidebar {
+  background-color: var(--bg) !important;
+  color: var(--text)          !important;
+}
+
+/* ── Scrollbars ──────────────────────────────────────────────────────────── */
+scrollbar {
+  background-color: transparent !important;
+}
+
+scrollbar thumb {
+  background-color: rgba(110, 85, 150, 0.4) !important;
+  border-radius: 4px !important;
+}
+
+scrollbar thumb:hover {
+  background-color: rgba(155, 123, 196, 0.65) !important;
+}
+
+/* ── Context menus ───────────────────────────────────────────────────────── */
+menupopup,
+#contentAreaContextMenu {
+  background-color: var(--surface)   !important;
+  border: 1px solid var(--border-hi) !important;
+  border-radius: 10px                !important;
+  padding: 4px                       !important;
+}
+
+menuitem {
+  border-radius: 6px   !important;
+  color: var(--text)   !important;
+  padding: 5px 10px    !important;
+}
+
+menuitem:hover {
+  background-color: var(--select) !important;
+}
+
+menuitem[disabled="true"] {
+  color: var(--text-muted) !important;
+}

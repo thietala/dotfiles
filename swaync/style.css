@@ -1,0 +1,261 @@
+/* ── Purple Glass — swaync theme ─────────────────────────────────────────── */
+
+* {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 13px;
+  transition: 120ms ease;
+}
+
+/* ── Control center panel ────────────────────────────────────────────────── */
+.control-center {
+  background: rgba(26, 14, 56, 0.82);
+  border-radius: 16px 0 0 16px;
+  border: 1px solid rgba(110, 85, 150, 0.35);
+  border-right: none;
+  padding: 12px;
+  box-shadow: -4px 0 24px rgba(10, 5, 30, 0.5);
+}
+
+/* ── Header row ──────────────────────────────────────────────────────────── */
+.widget-title {
+  padding: 4px 8px 12px 8px;
+}
+
+.widget-title > label {
+  font-size: 15px;
+  font-weight: bold;
+  color: #e8e0f0;
+}
+
+.widget-title > button {
+  background: rgba(155, 123, 196, 0.18);
+  border: 1px solid rgba(110, 85, 150, 0.35);
+  border-radius: 8px;
+  color: #8878a8;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.widget-title > button:hover {
+  background: rgba(155, 123, 196, 0.30);
+  color: #e8e0f0;
+  border-color: #9b7bc4;
+}
+
+/* ── Do not disturb toggle ───────────────────────────────────────────────── */
+.widget-dnd {
+  padding: 0 8px 12px 8px;
+}
+
+.widget-dnd > label {
+  color: #8878a8;
+  font-size: 12px;
+}
+
+.widget-dnd > switch {
+  background: rgba(26, 14, 56, 0.8);
+  border: 1px solid rgba(110, 85, 150, 0.35);
+  border-radius: 12px;
+}
+
+.widget-dnd > switch:checked {
+  background: rgba(155, 123, 196, 0.45);
+  border-color: #9b7bc4;
+}
+
+.widget-dnd > switch slider {
+  background: #9b7bc4;
+  border-radius: 10px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+/* ── MPRIS player ────────────────────────────────────────────────────────── */
+.widget-mpris {
+  padding: 0 8px 12px 8px;
+}
+
+.widget-mpris-player {
+  background: rgba(35, 18, 72, 0.65);
+  border: 1px solid rgba(110, 85, 150, 0.35);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.widget-mpris-title {
+  font-weight: bold;
+  color: #e8e0f0;
+  font-size: 13px;
+}
+
+.widget-mpris-subtitle {
+  color: #8878a8;
+  font-size: 12px;
+}
+
+.widget-mpris > box > button {
+  background: transparent;
+  border: none;
+  color: #8878a8;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.widget-mpris > box > button:hover {
+  background: rgba(155, 123, 196, 0.20);
+  color: #9b7bc4;
+}
+
+/* ── Notification list ───────────────────────────────────────────────────── */
+.notification-group {
+  margin: 4px 0;
+}
+
+.notification-group-headers {
+  color: #8878a8;
+  font-size: 11px;
+  padding: 0 4px;
+}
+
+/* ── Individual notification ─────────────────────────────────────────────── */
+.notification {
+  background: rgba(35, 18, 72, 0.65);
+  border: 1px solid rgba(110, 85, 150, 0.35);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 4px 0;
+  color: #e8e0f0;
+}
+
+/* Glass specular top edge */
+.notification::before {
+  background: linear-gradient(rgba(255,255,255,0.07), transparent);
+  border-radius: 12px 12px 0 0;
+  content: "";
+}
+
+.notification:hover {
+  background: rgba(35, 18, 72, 0.65);
+  border-color: rgba(110, 85, 150, 0.35);
+}
+
+.notification:hover > *,
+.notification:hover box,
+.notification:hover label,
+.notification:hover image {
+  background: transparent;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.notification-summary {
+  font-weight: bold;
+  font-size: 13px;
+  color: #e8e0f0;
+}
+
+.notification-body {
+  font-size: 12px;
+  color: #a898c8;
+  margin-top: 2px;
+}
+
+.notification-app-name {
+  font-size: 11px;
+  color: #8878a8;
+}
+
+.notification-time {
+  font-size: 11px;
+  color: #8878a8;
+}
+
+/* ── Notification urgency colours ────────────────────────────────────────── */
+.notification.low {
+  border-color: rgba(110, 85, 150, 0.25);
+}
+
+.notification.normal {
+  border-color: rgba(110, 85, 150, 0.35);
+}
+
+.notification.critical {
+  border-color: rgba(224, 107, 107, 0.70);
+  background: rgba(45, 14, 14, 0.70);
+}
+
+.notification.critical .notification-summary {
+  color: #ffb4ab;
+}
+
+/* ── Action buttons ──────────────────────────────────────────────────────── */
+.notification-action {
+  background: rgba(155, 123, 196, 0.15);
+  border: 1px solid rgba(110, 85, 150, 0.30);
+  border-radius: 8px;
+  color: #9b7bc4;
+  padding: 4px 10px;
+  margin: 4px 4px 0 0;
+  font-size: 12px;
+}
+
+.notification-action:hover {
+  background: rgba(155, 123, 196, 0.30);
+  border-color: #9b7bc4;
+  color: #e8e0f0;
+}
+
+.notification-action:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.notification-action:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+.notification > box > box > button {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #8878a8;
+  padding: 2px 6px;
+  min-width: 0;
+}
+
+.notification > box > box > button:hover {
+  background: rgba(224, 107, 107, 0.25);
+  color: #ffb4ab;
+}
+
+/* ── Popup notification (toast) ──────────────────────────────────────────── */
+.notification-popup {
+  background: rgba(35, 18, 72, 0.82);
+  border: 1px solid rgba(110, 85, 150, 0.45);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 8px;
+  box-shadow: 0 4px 24px rgba(10, 5, 30, 0.55);
+  color: #e8e0f0;
+}
+
+.notification-popup.critical {
+  border-color: rgba(224, 107, 107, 0.70);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+scrollbar trough {
+  background: rgba(26, 14, 56, 0.4);
+  border-radius: 4px;
+}
+
+scrollbar slider {
+  background: rgba(110, 85, 150, 0.45);
+  border-radius: 4px;
+  min-width: 4px;
+}
+
+scrollbar slider:hover {
+  background: rgba(155, 123, 196, 0.65);
+}
