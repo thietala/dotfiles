@@ -1,0 +1,19 @@
+/**
+ * Deep desaturated royal purple palette — matches the quickshell bar
+ */
+* {
+    surface:                    #1a0e38;
+    surface-container:          #231248;
+    surface-container-high:     #2c1558;
+    surface-container-highest:  #351868;
+    on-surface:                 #e8e0f0;
+    on-surface-variant:         #a898c8;
+    primary:                    #9b7bc4;
+    on-primary:                 #1a0e38;
+    secondary:                  #8a6aae;
+    tertiary:                   #a87cc4;
+    outline:                    #8878a8;
+    error:                      #ffb4ab;
+    error-container:            #2d1b1b;
+    on-error-container:         #ffb4ab;
+}

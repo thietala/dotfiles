@@ -1,0 +1,112 @@
+/**
+ * Rofi — sidebar launcher with large icons  (Super+Shift+R)
+ * Style inspired by z.hyprdots wallpaper.rasi / zusqii
+ * Shows a left panel at 95% height with big app icons in a grid
+ */
+
+configuration {
+    modi:                   "drun";
+    show-icons:             true;
+    icon-theme:             "Papirus-Dark";
+    font:                   "JetBrainsMono Nerd Font 10";
+    drun-display-format:    "{name}";
+    click-to-exit:          true;
+    kb-cancel:              "Escape";
+    kb-accept-entry:        "Return,KP_Enter";
+}
+
+@import "colors.rasi"
+
+* {
+    background-color:   transparent;
+    text-color:         @on-surface;
+    border-color:       @outline;
+}
+
+/* ── Panel ───────────────────────────────────────────────────────────── */
+
+window {
+    anchor:             west;
+    location:           west;
+    width:              330px;
+    height:             95%;
+    x-offset:           14px;
+    y-offset:           0px;
+    background-color:   rgba(28, 14, 52, 10%);
+    border:             1px;
+    border-radius:      20px;
+    border-color:       rgba(110, 85, 150, 35%);
+}
+
+mainbox {
+    spacing:            12px;
+    padding:            16px;
+    children:           [ inputbar, listview ];
+    background-color:   transparent;
+}
+
+/* ── Search bar ──────────────────────────────────────────────────────── */
+
+inputbar {
+    children:           [ entry ];
+    padding:            10px 14px;
+    background-color:   rgba(45, 20, 75, 10%);
+    border-radius:      12px;
+}
+
+entry {
+    placeholder:        " Search apps...";
+    placeholder-color:  @on-surface-variant;
+    background-color:   inherit;
+    text-color:         @on-surface;
+    cursor:             text;
+    vertical-align:     0.5;
+}
+
+/* ── App grid ────────────────────────────────────────────────────────── */
+
+listview {
+    columns:        3;
+    lines:          4;
+    cycle:          true;
+    spacing:        10px;
+    fixed-height:   true;
+    scrollbar:      false;
+    background-color: transparent;
+}
+
+element {
+    orientation:        vertical;
+    padding:            10px 6px;
+    border-radius:      14px;
+    cursor:             pointer;
+    spacing:            6px;
+    background-color:   transparent;
+}
+
+element selected {
+    background-color:   rgba(110, 85, 150, 18%);
+    border:             1px;
+    border-color:       @primary;
+    border-radius:      14px;
+}
+
+element-icon {
+    size:               54px;
+    horizontal-align:   0.5;
+    background-color:   transparent;
+    cursor:             inherit;
+}
+
+element-text {
+    horizontal-align:   0.5;
+    vertical-align:     0.5;
+    background-color:   transparent;
+    text-color:         inherit;
+    cursor:             inherit;
+    font:               "JetBrainsMono Nerd Font 9";
+}
+
+element normal.normal     { background-color: transparent;              text-color: @on-surface; }
+element alternate.normal  { background-color: transparent;              text-color: @on-surface; }
+element selected.normal   { background-color: rgba(110, 85, 150, 18%); text-color: @on-surface; }

@@ -47,9 +47,25 @@ link() {
 
 for dir in "$DOTFILES"/*/; do
     name="$(basename "$dir")"
-    [[ "$name" == "ly" ]] && continue
+[[ "$name" == "sddm"           ]] && continue
+    [[ "$name" == "vscodium-theme" ]] && continue
+    [[ "$name" == "firefox"        ]] && continue
+    [[ "$name" == "kdeglobals"     ]] && continue
+    [[ "$name" == "Kvantum"        ]] && continue
     link "$dir" "$CONFIG/$name"
 done
+
+# kdeglobals is a single file, not a directory
+link "$DOTFILES/kdeglobals/kdeglobals" "$CONFIG/kdeglobals"
+
+# Kvantum theme + config
+mkdir -p "$CONFIG/Kvantum"
+link "$DOTFILES/Kvantum/PurpleGlass" "$CONFIG/Kvantum/PurpleGlass"
+cat > "$CONFIG/Kvantum/kvantum.kvconfig" << 'EOF'
+[General]
+theme=PurpleGlass
+EOF
+info "Kvantum theme set to PurpleGlass"
 
 # ── Standalone files ───────────────────────────────────────────────────────────
 
@@ -60,10 +76,75 @@ for file in "$DOTFILES"/*.conf "$DOTFILES"/*.list "$DOTFILES"/*.ini; do
     link "$file" "$CONFIG/$name"
 done
 
+# ── System files (require sudo) ────────────────────────────────────────────────
+
+syslink() {
+    local src="$1"
+    local dst="$2"
+    if [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]]; then
+        skip "$dst → already linked"
+        return
+    fi
+    if [[ -e "$dst" && ! -L "$dst" ]]; then
+        warning "$dst exists — backing up to ${dst}.bak"
+        sudo mv "$dst" "${dst}.bak"
+    fi
+    [[ -L "$dst" ]] && sudo rm "$dst"
+    sudo mkdir -p "$(dirname "$dst")"
+    sudo ln -s "$src" "$dst"
+    info "$dst → $src"
+}
+
+# ── Firefox theme ──────────────────────────────────────────────────────────────
+
+FIREFOX_PROFILES="$HOME/.config/mozilla/firefox"
+if [[ -f "$FIREFOX_PROFILES/profiles.ini" ]]; then
+    # Find the default-release profile path
+    FF_PROFILE=$(grep -A3 '\[Profile0\]' "$FIREFOX_PROFILES/profiles.ini" | grep '^Path=' | cut -d= -f2)
+    if [[ -n "$FF_PROFILE" ]]; then
+        FF_CHROME="$FIREFOX_PROFILES/$FF_PROFILE/chrome"
+        mkdir -p "$FF_CHROME"
+        cp "$DOTFILES/firefox/chrome/userChrome.css" "$FF_CHROME/userChrome.css"
+        info "Firefox theme deployed → $FF_CHROME"
+        info "Enable in about:config: toolkit.legacyUserProfileCustomizations.stylesheets = true"
+    fi
+fi
+
+# ── VSCodium theme ─────────────────────────────────────────────────────────────
+
+if command -v codium &>/dev/null; then
+    EXTENSIONS_DIR="$HOME/.vscode-oss/extensions"
+    mkdir -p "$EXTENSIONS_DIR/purple-glass"
+    cp -r "$DOTFILES/vscodium-theme/." "$EXTENSIONS_DIR/purple-glass/"
+    info "VSCodium theme deployed → $EXTENSIONS_DIR/purple-glass"
+    info "Activate via: File → Preferences → Color Theme → Purple Glass"
+elif command -v code &>/dev/null; then
+    EXTENSIONS_DIR="$HOME/.vscode/extensions"
+    mkdir -p "$EXTENSIONS_DIR/purple-glass"
+    cp -r "$DOTFILES/vscodium-theme/." "$EXTENSIONS_DIR/purple-glass/"
+    info "VSCode theme deployed → $EXTENSIONS_DIR/purple-glass"
+    info "Activate via: File → Preferences → Color Theme → Purple Glass"
+fi
+
+echo ""
+echo -e "${GREEN}System config (sudo required):${RESET}"
+
+# ── SDDM ───────────────────────────────────────────────────────────────────────
+if command -v sddm &>/dev/null; then
+    sudo mkdir -p /usr/share/sddm/themes/purple-glass
+    sudo cp -r "$DOTFILES/sddm/theme/." /usr/share/sddm/themes/purple-glass/
+    info "/usr/share/sddm/themes/purple-glass → deployed"
+
+    sudo mkdir -p /etc/sddm.conf.d
+    syslink "$DOTFILES/sddm/sddm.conf" /etc/sddm.conf.d/purple-glass.conf
+
+    if ! systemctl is-enabled sddm &>/dev/null 2>&1; then
+        sudo systemctl enable sddm
+        info "sddm enabled"
+    fi
+else
+    warning "sddm not installed — skipping (install with: sudo pacman -S sddm)"
+fi
+
 echo ""
 echo -e "${GREEN}Done.${RESET}"
-
-# ── Manual steps (require sudo) ────────────────────────────────────────────────
-echo ""
-echo -e "${YELLOW}Manual steps required:${RESET}"
-echo -e "  sudo cp $DOTFILES/ly/config.ini /etc/ly/config.ini"
