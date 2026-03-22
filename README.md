@@ -24,12 +24,19 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | `hyprlock` | Lock screen |
 | `hypridle` | Idle daemon |
 | `hyprpaper` | Wallpaper daemon |
-| `quickshell` | Top bar (workspaces, clock, MPRIS, system tray) |
+| `quickshell` | Top bar — workspaces, clock, MPRIS, audio, bluetooth, tray, control center |
 | `kitty` | Terminal emulator |
 | `rofi-wayland` | App launcher (compact + sidebar modes) |
 | `wlogout` | Power menu |
 | `swaync` | Notification center |
 | `sddm` | Display manager |
+
+### Audio
+
+| Package | Purpose |
+|---|---|
+| `pipewire` | Audio server — required for control center audio slider |
+| `wireplumber` | PipeWire session manager |
 
 ### Fonts
 
@@ -53,7 +60,16 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | `adw-gtk-theme` | GTK3 base theme (`adw-gtk3-dark`) |
 | `kvantum` | Qt style engine for KDE/Qt apps |
 | `qt6ct` | Qt6 color/font configuration |
-| `papirus-icon-theme` | Icon theme |
+| `breeze-icons` | Icon theme used by Qt/KDE apps |
+
+### Applications
+
+| Package | Purpose |
+|---|---|
+| `gwenview` | Image viewer (default for all image types) |
+| `firefox` | Browser (default for web + PDF) |
+| `vlc` | Media player (default for video/audio) |
+| `codium` | Text/code editor (default for text, JSON, CSV, XML) |
 
 ### Optional
 
@@ -64,7 +80,7 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | `playerctl` | MPRIS media control |
 | `blueman` | Bluetooth manager |
 | `nm-connection-editor` | Network configuration |
-| `pavucontrol` | Audio control |
+| `pavucontrol` | Audio control (GUI alternative to control center) |
 
 ---
 
@@ -73,7 +89,7 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | Config | Description |
 |---|---|
 | `hypr/` | Hyprland, hyprlock, hypridle, hyprpaper |
-| `quickshell/` | Top bar — workspace dots, clock, MPRIS player, network traffic, audio, bluetooth, tray, power |
+| `quickshell/` | Top bar — workspace dots, clock, MPRIS player, network traffic, audio, bluetooth, tray, power; Control Center panel (Super+D) |
 | `kitty/` | Terminal — purple glass theme, 50% opacity |
 | `rofi/` | App launchers — compact center modal (`Super+R`) and sidebar grid (`Super+Shift+R`) |
 | `swaync/` | Notification center — purple glass CSS theme |
@@ -81,10 +97,11 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | `wlogout/` | Power menu — lock, logout, suspend, hibernate, reboot, shutdown |
 | `gtk-3.0/` | GTK3 theme overrides — purple glass colors on top of adw-gtk3-dark |
 | `gtk-4.0/` | GTK4 theme overrides |
-| `kdeglobals/` | KDE/Qt app color scheme (Gwenview, Okular, etc.) |
-| `qt6ct/` | Qt6 font, style and color palette |
-| `Kvantum/` | Kvantum purple glass theme for Qt/KDE apps |
-| `firefox/` | userChrome.css — purple glass browser UI |
+| `kdeglobals/` | KDE color scheme for Qt/KDE apps (Gwenview, Okular, etc.) |
+| `qt6ct/` | Qt6 font, style (Fusion) and color palette with QSS overrides |
+| `Kvantum/` | Kvantum purple glass theme — SVG + color config |
+| `color-schemes/` | KDE `.colors` file for KColorScheme integration |
+| `firefox/` | `userChrome.css` + `userContent.css` — full purple glass browser UI |
 | `vscodium-theme/` | VSCodium/VSCode extension — Purple Glass color theme |
 | `lf/` | Terminal file manager with image/video/PDF preview |
 | `xdg-desktop-portal/` | Portal config for Hyprland |
@@ -102,10 +119,10 @@ A consistent visual language applied across every layer of the stack:
 | Surface | `#231248` | Panels, cards |
 | Primary | `#9b7bc4` | Accents, active elements |
 | Secondary | `#8a6aae` | Borders, inactive |
-| Text | `#e8e0f0` | Primary text |
+| Text | `#ffffff` | Primary text |
 | Muted | `#8878a8` | Secondary text, icons |
 
-Blur is applied to the bar and rofi via Hyprland `layerrule`. Window transparency is set per-app via `windowrule` in `hypr/conf/windowrules.conf`.
+Blur is applied to the bar, control center, and rofi via Hyprland `layerrule`. Window transparency is set per-app via `windowrule` in `hypr/conf/windowrules.conf`.
 
 ---
 
@@ -115,9 +132,13 @@ Blur is applied to the bar and rofi via Hyprland `layerrule`. Window transparenc
 |---|---|
 | `Super + R` | App launcher (compact) |
 | `Super + Shift + R` | App launcher (sidebar grid) |
+| `Super + D` | Toggle control center |
 | `Super + E` | File manager (`lf` in kitty) |
-| `Super + Shift + P` | Region screenshot → `~/Pictures/screenshots/` |
+| `Super + J` | Toggle split direction (dwindle) |
+| `Super + Shift + P` | Full screenshot → `~/Pictures/screenshots/` |
+| `Super + Shift + Ctrl + P` | Region screenshot |
 | `Super + L` | Lock screen |
+| `Super + N` | Toggle notification center |
 
 ---
 
