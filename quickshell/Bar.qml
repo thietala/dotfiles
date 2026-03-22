@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Io
 
 PanelWindow {
     id: root
@@ -9,19 +10,59 @@ PanelWindow {
     anchors { top: true; left: true; right: true }
 
     WlrLayershell.layer: WlrLayer.Top
-    // Always reserve only 35 px — popup overlaps content below rather than pushing it
+    // Always reserve only 35 px — MPRIS popup overlaps content below
     WlrLayershell.exclusiveZone: 35
     WlrLayershell.namespace: "quickshell-bar"
 
-    // Grows to fit the popup when visible
-    readonly property int barH:     35
-    readonly property int popupH:   200
-    implicitHeight: popupVisible ? barH + popupH + 10 : barH
+    // ── Heights ───────────────────────────────────────────────────────────────
+    readonly property int barH:   35
+    readonly property int popupH: 200   // MPRIS popup
 
+    // Window only grows for the MPRIS popup; CC lives in its own narrow window
+    implicitHeight: popupVisible ? barH + popupH + 10 : barH
 
     color: "transparent"
 
-    // ── Full-width bar background ─────────────────────────────────────────
+    // ── State: MPRIS hover popup ──────────────────────────────────────────────
+    property bool popupVisible: false
+
+    Timer {
+        id: closeTimer
+        interval: 500
+        onTriggered: root.popupVisible = false
+    }
+
+    function onMprisHoverEnter() {
+        closeTimer.stop()
+        if (!popupVisible) {
+            mprisWidget._syncPos()
+            popupVisible = true
+        }
+    }
+    function onMprisHoverLeave() { closeTimer.restart() }
+
+    // ── Processes: CC control via IPC ─────────────────────────────────────────
+    Process {
+        id: ccToggleProc
+        command: ["quickshell", "ipc", "call", "cc", "toggle"]
+    }
+    Process {
+        id: ccOpenProc
+        command: ["quickshell", "ipc", "call", "cc", "open"]
+    }
+    Process {
+        id: ccCloseIfUnhoveredProc
+        command: ["quickshell", "ipc", "call", "cc", "closeIfUnhovered"]
+    }
+    // When mouse leaves the clock, give the user time to reach the CC panel.
+    // If they don't (mouse went elsewhere), close the CC.
+    Timer {
+        id: clockLeaveTimer
+        interval: 500
+        onTriggered: ccCloseIfUnhoveredProc.running = true
+    }
+
+    // ── Full-width bar background ─────────────────────────────────────────────
     Rectangle {
         anchors { left: parent.left; right: parent.right; top: parent.top }
         height: root.barH
@@ -34,25 +75,7 @@ PanelWindow {
         }
     }
 
-    // ── Popup visibility (with close-delay so you can move mouse into it) ──
-    property bool popupVisible: false
-
-    Timer {
-        id: closeTimer
-        interval: 500
-        onTriggered: root.popupVisible = false
-    }
-
-    function onMprisHoverEnter() {
-        closeTimer.stop()
-        if (!popupVisible) {
-            mprisWidget._syncPos()   // refresh position when popup opens
-            popupVisible = true
-        }
-    }
-    function onMprisHoverLeave() { closeTimer.restart() }
-
-    // ── Left — window title ───────────────────────────────────────────────
+    // ── Left — window title ───────────────────────────────────────────────────
     WindowTitle {
         id: wt
         anchors { left: parent.left; top: parent.top; leftMargin: 16 }
@@ -60,14 +83,13 @@ PanelWindow {
         width: implicitWidth
     }
 
-    // ── Centre — dock section hanging from top ────────────────────────────
+    // ── Centre — dock section ─────────────────────────────────────────────────
     Item {
         id: centreSection
         anchors { horizontalCenter: parent.horizontalCenter; top: parent.top }
         width: centreRow.implicitWidth + 32
         height: root.barH
 
-        // RowLayout centres items of different heights on the same baseline
         RowLayout {
             id: centreRow
             anchors.centerIn: parent
@@ -82,7 +104,14 @@ PanelWindow {
                 color: Qt.rgba(110/255, 85/255, 150/255, 0.50)
             }
 
-            Clock { Layout.alignment: Qt.AlignVCenter }
+            // Clock — clicking toggles the Control Center
+            Clock {
+                id: clockWidget
+                Layout.alignment: Qt.AlignVCenter
+                onClicked:  ccToggleProc.running        = true
+                onHovered:  { clockLeaveTimer.stop(); ccOpenProc.running = true }
+                onExited:   clockLeaveTimer.restart()
+            }
 
             Mpris {
                 id: mprisWidget
@@ -91,7 +120,7 @@ PanelWindow {
             }
         }
 
-        // Progress bar — anchored to dock bottom, completely outside hover zone
+        // Progress bar anchored to dock bottom, outside hover zone
         Rectangle {
             visible: mprisWidget.visible && mprisWidget.trackLen > 0
             anchors {
@@ -110,7 +139,7 @@ PanelWindow {
         }
     }
 
-    // ── Right — status group ──────────────────────────────────────────────
+    // ── Right — status group ──────────────────────────────────────────────────
     Row {
         anchors { right: parent.right; top: parent.top; rightMargin: 16 }
         height: root.barH
@@ -135,7 +164,7 @@ PanelWindow {
         PowerButton { anchors.verticalCenter: parent.verticalCenter }
     }
 
-    // ── Mpris hover popup — centred below the dock ────────────────────────
+    // ── MPRIS hover popup — centred below the dock ────────────────────────────
     Item {
         id: popup
 
@@ -147,13 +176,12 @@ PanelWindow {
         opacity: root.popupVisible ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 160 } }
 
-        // Centre under the dock section
         x: (root.width - width) / 2
         y: root.barH
         width: 320
         height: root.popupH
 
-        // ── Card background ───────────────────────────────────────────
+        // Card background
         Rectangle {
             anchors.fill: parent
             color: Qt.rgba(28/255, 14/255, 52/255, 0.90)
@@ -165,12 +193,11 @@ PanelWindow {
                 anchors { fill: parent; margins: 16 }
                 spacing: 12
 
-                // ── Top row: album art + track info ───────────────────
+                // Top row: album art + track info
                 Row {
                     width: parent.width
                     spacing: 14
 
-                    // Album art
                     Rectangle {
                         id: artContainer
                         width: 80; height: 80
@@ -188,7 +215,6 @@ PanelWindow {
                             onStatusChanged: artFallback.visible = (status !== Image.Ready)
                         }
 
-                            // Fallback music icon when no art available
                         Text {
                             id: artFallback
                             anchors.centerIn: parent
@@ -198,7 +224,6 @@ PanelWindow {
                         }
                     }
 
-                    // Track info
                     Column {
                         width: parent.width - artContainer.width - parent.spacing
                         anchors.verticalCenter: artContainer.verticalCenter
@@ -230,7 +255,7 @@ PanelWindow {
                     }
                 }
 
-                // ── Controls ──────────────────────────────────────────
+                // Controls
                 Row {
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: 20
@@ -261,13 +286,12 @@ PanelWindow {
                     }
                 }
 
-                // ── Progress bar + timestamps ─────────────────────────
+                // Progress bar + timestamps
                 Column {
                     width: parent.width
                     spacing: 4
                     visible: mprisWidget.trackLen > 0
 
-                    // Bar — click to scrub
                     Rectangle {
                         id: scrubBar
                         width: parent.width; height: 3; radius: 2
@@ -281,7 +305,6 @@ PanelWindow {
                         }
                     }
 
-                    // Timestamps — position left, duration right
                     Item {
                         width: parent.width
                         height: tsPos.implicitHeight
