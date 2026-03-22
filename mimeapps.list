@@ -28,6 +28,7 @@ audio/x-wav=vlc-2.desktop
 audio/x-aiff=vlc-2.desktop
 audio/opus=vlc-2.desktop
 audio/webm=vlc-2.desktop
+audio/x-m4b=vlc-2.desktop
 
 # Images — Gwenview
 image/jpeg=org.kde.gwenview.desktop
@@ -39,3 +40,12 @@ image/bmp=org.kde.gwenview.desktop
 image/svg+xml=org.kde.gwenview.desktop
 image/avif=org.kde.gwenview.desktop
 image/x-xcf=org.kde.gwenview.desktop
+
+# Text — VSCodium
+text/plain=codium.desktop
+text/csv=codium.desktop
+text/xml=codium.desktop
+application/json=codium.desktop
+
+# PDF — Firefox
+application/pdf=firefox.desktop

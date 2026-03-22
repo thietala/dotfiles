@@ -16,6 +16,11 @@
 
   --toolbar-bgcolor:            var(--bg)      !important;
   --toolbar-color:              var(--text)    !important;
+  --panel-background:           var(--surface) !important;
+  --panel-color:                var(--text)    !important;
+  --panel-border-color:         var(--border)  !important;
+  --autocomplete-popup-background: var(--surface) !important;
+  --autocomplete-popup-color:   var(--text)    !important;
   --toolbarbutton-hover-background: var(--select) !important;
   --toolbarbutton-active-background: rgba(155,123,196,0.35) !important;
   --tab-selected-bgcolor:       var(--surface) !important;
@@ -115,11 +120,17 @@
 
 /* ── Address / URL bar ───────────────────────────────────────────────────── */
 #urlbar {
-  --urlbar-box-bgcolor:          var(--surface)  !important;
-  --urlbar-box-focus-bgcolor:    var(--surface2) !important;
-  --urlbar-box-hover-bgcolor:    var(--surface2) !important;
-  --urlbar-box-active-bgcolor:   var(--surface2) !important;
-  --urlbar-box-text-color:       var(--text)     !important;
+  --urlbar-box-bgcolor:              var(--surface)  !important;
+  --urlbar-box-focus-bgcolor:        var(--surface2) !important;
+  --urlbar-box-hover-bgcolor:        var(--surface2) !important;
+  --urlbar-box-active-bgcolor:       var(--surface2) !important;
+  --urlbar-box-text-color:           var(--text)     !important;
+  --toolbar-field-background-color:  var(--surface)  !important;
+  --toolbar-field-color:             var(--text)     !important;
+  --toolbar-field-focus-background-color: var(--surface2) !important;
+  --toolbar-field-focus-color:       var(--text)     !important;
+  --toolbar-field-border-color:      var(--border)   !important;
+  --toolbar-field-focus-border-color: var(--primary) !important;
 }
 
 #urlbar-background {

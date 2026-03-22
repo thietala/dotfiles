@@ -1,0 +1,26 @@
+QWidget {
+    color: #ffffff;
+    background-color: #1a0e38;
+}
+QDialog, QFrame, QGroupBox {
+    background-color: #1a0e38;
+}
+QMenu {
+    background-color: #231248;
+    border: 1px solid #3d2070;
+}
+QMenu::item:selected {
+    background-color: #9b7bc4;
+    color: #1a0e38;
+}
+QLabel {
+    color: #ffffff;
+}
+QListView, QTreeView, QTableView {
+    color: #ffffff;
+    background-color: #231248;
+    alternate-background-color: #1e1042;
+}
+QListView::item, QTreeView::item {
+    color: #ffffff;
+}
