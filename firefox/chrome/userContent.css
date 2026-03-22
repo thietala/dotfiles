@@ -1,0 +1,28 @@
+/* ── Purple Glass — userContent.css ─────────────────────────────────────────
+   Styles browser content areas (new tab, blank pages)
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── about:blank ─────────────────────────────────────────────────────────── */
+@-moz-document url("about:blank") {
+  html, body {
+    background-color: #1a0e38 !important;
+    color: #e8e0f0 !important;
+  }
+}
+
+/* ── about:newtab / about:home ───────────────────────────────────────────── */
+@-moz-document url("about:newtab"), url("about:home") {
+  :root {
+    --newtab-background-color: #1a0e38 !important;
+    --newtab-background-color-secondary: #231248 !important;
+    --newtab-text-primary-color: #e8e0f0 !important;
+    --newtab-text-secondary-color: #8878a8 !important;
+    --newtab-element-hover-color: rgba(155, 123, 196, 0.15) !important;
+    --newtab-border-color: rgba(110, 85, 150, 0.35) !important;
+    --color-accent-primary: #9b7bc4 !important;
+  }
+
+  body {
+    background-color: #1a0e38 !important;
+  }
+}

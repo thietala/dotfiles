@@ -52,11 +52,16 @@ for dir in "$DOTFILES"/*/; do
     [[ "$name" == "firefox"        ]] && continue
     [[ "$name" == "kdeglobals"     ]] && continue
     [[ "$name" == "Kvantum"        ]] && continue
+    [[ "$name" == "color-schemes"  ]] && continue
     link "$dir" "$CONFIG/$name"
 done
 
 # kdeglobals is a single file, not a directory
 link "$DOTFILES/kdeglobals/kdeglobals" "$CONFIG/kdeglobals"
+
+# KDE color scheme
+mkdir -p "$HOME/.local/share/color-schemes"
+link "$DOTFILES/color-schemes/PurpleGlass.colors" "$HOME/.local/share/color-schemes/PurpleGlass.colors"
 
 # Kvantum theme + config
 mkdir -p "$CONFIG/Kvantum"
@@ -105,6 +110,7 @@ if [[ -f "$FIREFOX_PROFILES/profiles.ini" ]]; then
         FF_CHROME="$FIREFOX_PROFILES/$FF_PROFILE/chrome"
         mkdir -p "$FF_CHROME"
         cp "$DOTFILES/firefox/chrome/userChrome.css" "$FF_CHROME/userChrome.css"
+        cp "$DOTFILES/firefox/chrome/userContent.css" "$FF_CHROME/userContent.css"
         info "Firefox theme deployed → $FF_CHROME"
         info "Enable in about:config: toolkit.legacyUserProfileCustomizations.stylesheets = true"
     fi
