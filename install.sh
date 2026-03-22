@@ -47,14 +47,25 @@ link() {
 
 for dir in "$DOTFILES"/*/; do
     name="$(basename "$dir")"
-[[ "$name" == "sddm"           ]] && continue
+    [[ "$name" == "sddm"           ]] && continue
     [[ "$name" == "vscodium-theme" ]] && continue
     [[ "$name" == "firefox"        ]] && continue
     [[ "$name" == "kdeglobals"     ]] && continue
     [[ "$name" == "Kvantum"        ]] && continue
     [[ "$name" == "color-schemes"  ]] && continue
+    [[ "$name" == "qt6ct"          ]] && continue
     link "$dir" "$CONFIG/$name"
 done
+
+# qt6ct — symlink subdirs, generate qt6ct.conf with real HOME path
+# Remove old directory symlink if present so mkdir -p creates a real dir
+[[ -L "$CONFIG/qt6ct" ]] && rm "$CONFIG/qt6ct"
+mkdir -p "$CONFIG/qt6ct"
+link "$DOTFILES/qt6ct/colors" "$CONFIG/qt6ct/colors"
+link "$DOTFILES/qt6ct/qss"    "$CONFIG/qt6ct/qss"
+qt6ct_conf="$(sed "s|__HOME__|$HOME|g" "$DOTFILES/qt6ct/qt6ct.conf")"
+echo "$qt6ct_conf" > "$CONFIG/qt6ct/qt6ct.conf"
+info "$CONFIG/qt6ct/qt6ct.conf → generated with HOME=$HOME"
 
 # kdeglobals is a single file, not a directory
 link "$DOTFILES/kdeglobals/kdeglobals" "$CONFIG/kdeglobals"
@@ -139,6 +150,7 @@ echo -e "${GREEN}System config (sudo required):${RESET}"
 if command -v sddm &>/dev/null; then
     sudo mkdir -p /usr/share/sddm/themes/purple-glass
     sudo cp -r "$DOTFILES/sddm/theme/." /usr/share/sddm/themes/purple-glass/
+    sudo sed -i "s|__HOME__|$HOME|g" /usr/share/sddm/themes/purple-glass/theme.conf
     info "/usr/share/sddm/themes/purple-glass → deployed"
 
     sudo mkdir -p /etc/sddm.conf.d
