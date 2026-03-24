@@ -60,7 +60,7 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | `adw-gtk-theme` | GTK3 base theme (`adw-gtk3-dark`) |
 | `kvantum` | Qt style engine for KDE/Qt apps |
 | `qt6ct` | Qt6 color/font configuration |
-| `breeze-icons` | Icon theme used by Qt/KDE apps |
+| `breeze-icons` | Icon theme for Qt/KDE apps — uses system accent color automatically |
 
 ### Applications
 

@@ -239,6 +239,12 @@ menuseparator {
   color: var(--text)          !important;
 }
 
+/* ── Letterbox (privacy.resistFingerprinting.letterboxing) ──────────────── */
+#tabbrowser-tabpanels,
+.browserStack {
+  background-color: var(--bg) !important;
+}
+
 /* ── Scrollbars ──────────────────────────────────────────────────────────── */
 scrollbar {
   background-color: transparent !important;
