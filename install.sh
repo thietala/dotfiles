@@ -43,54 +43,55 @@ link() {
     info "$dst → $src"
 }
 
-# ── Directories ────────────────────────────────────────────────────────────────
+# ── Compositor ─────────────────────────────────────────────────────────────────
 
-for dir in "$DOTFILES"/*/; do
-    name="$(basename "$dir")"
-    [[ "$name" == "sddm"           ]] && continue
-    [[ "$name" == "vscodium-theme" ]] && continue
-    [[ "$name" == "firefox"        ]] && continue
-    [[ "$name" == "kdeglobals"     ]] && continue
-    [[ "$name" == "Kvantum"        ]] && continue
-    [[ "$name" == "color-schemes"  ]] && continue
-    [[ "$name" == "qt6ct"          ]] && continue
-    link "$dir" "$CONFIG/$name"
-done
+link "$DOTFILES/compositor/hypr"        "$CONFIG/hypr"
+link "$DOTFILES/compositor/quickshell"  "$CONFIG/quickshell"
+link "$DOTFILES/compositor/rofi"        "$CONFIG/rofi"
+link "$DOTFILES/compositor/wlogout"     "$CONFIG/wlogout"
 
-# qt6ct — symlink subdirs, generate qt6ct.conf with real HOME path
-# Remove old directory symlink if present so mkdir -p creates a real dir
-[[ -L "$CONFIG/qt6ct" ]] && rm "$CONFIG/qt6ct"
-mkdir -p "$CONFIG/qt6ct"
-link "$DOTFILES/qt6ct/colors" "$CONFIG/qt6ct/colors"
-link "$DOTFILES/qt6ct/qss"    "$CONFIG/qt6ct/qss"
-qt6ct_conf="$(sed "s|__HOME__|$HOME|g" "$DOTFILES/qt6ct/qt6ct.conf")"
-echo "$qt6ct_conf" > "$CONFIG/qt6ct/qt6ct.conf"
-info "$CONFIG/qt6ct/qt6ct.conf → generated with HOME=$HOME"
+# ── Apps ───────────────────────────────────────────────────────────────────────
+
+link "$DOTFILES/apps/btop"    "$CONFIG/btop"
+link "$DOTFILES/apps/kitty"   "$CONFIG/kitty"
+link "$DOTFILES/apps/lf"      "$CONFIG/lf"
+link "$DOTFILES/apps/swaync"  "$CONFIG/swaync"
+
+# ── Theme ──────────────────────────────────────────────────────────────────────
+
+link "$DOTFILES/theme/gtk-3.0" "$CONFIG/gtk-3.0"
+link "$DOTFILES/theme/gtk-4.0" "$CONFIG/gtk-4.0"
 
 # kdeglobals is a single file, not a directory
-link "$DOTFILES/kdeglobals/kdeglobals" "$CONFIG/kdeglobals"
+link "$DOTFILES/theme/kdeglobals/kdeglobals" "$CONFIG/kdeglobals"
 
 # KDE color scheme
 mkdir -p "$HOME/.local/share/color-schemes"
-link "$DOTFILES/color-schemes/PurpleGlass.colors" "$HOME/.local/share/color-schemes/PurpleGlass.colors"
+link "$DOTFILES/theme/color-schemes/PurpleGlass.colors" "$HOME/.local/share/color-schemes/PurpleGlass.colors"
 
 # Kvantum theme + config
 mkdir -p "$CONFIG/Kvantum"
-link "$DOTFILES/Kvantum/PurpleGlass" "$CONFIG/Kvantum/PurpleGlass"
+link "$DOTFILES/theme/Kvantum/PurpleGlass" "$CONFIG/Kvantum/PurpleGlass"
 cat > "$CONFIG/Kvantum/kvantum.kvconfig" << 'EOF'
 [General]
 theme=PurpleGlass
 EOF
 info "Kvantum theme set to PurpleGlass"
 
-# ── Standalone files ───────────────────────────────────────────────────────────
+# qt6ct — symlink subdirs, generate qt6ct.conf with real HOME path
+[[ -L "$CONFIG/qt6ct" ]] && rm "$CONFIG/qt6ct"
+mkdir -p "$CONFIG/qt6ct"
+link "$DOTFILES/theme/qt6ct/colors" "$CONFIG/qt6ct/colors"
+link "$DOTFILES/theme/qt6ct/qss"    "$CONFIG/qt6ct/qss"
+qt6ct_conf="$(sed "s|__HOME__|$HOME|g" "$DOTFILES/theme/qt6ct/qt6ct.conf")"
+echo "$qt6ct_conf" > "$CONFIG/qt6ct/qt6ct.conf"
+info "$CONFIG/qt6ct/qt6ct.conf → generated with HOME=$HOME"
 
-shopt -s nullglob
-for file in "$DOTFILES"/*.conf "$DOTFILES"/*.list "$DOTFILES"/*.ini "$DOTFILES"/*.toml; do
-    [[ -f "$file" ]] || continue
-    name="$(basename "$file")"
-    link "$file" "$CONFIG/$name"
-done
+# ── System ─────────────────────────────────────────────────────────────────────
+
+link "$DOTFILES/system/xdg-desktop-portal" "$CONFIG/xdg-desktop-portal"
+link "$DOTFILES/system/mimeapps.list"      "$CONFIG/mimeapps.list"
+link "$DOTFILES/system/starship.toml"      "$CONFIG/starship.toml"
 
 # Starship — add init to .bashrc if not already there
 if command -v starship &>/dev/null; then
@@ -100,6 +101,37 @@ if command -v starship &>/dev/null; then
     else
         skip "Starship already in ~/.bashrc"
     fi
+fi
+
+# ── Firefox theme ──────────────────────────────────────────────────────────────
+
+FIREFOX_PROFILES="$HOME/.config/mozilla/firefox"
+if [[ -f "$FIREFOX_PROFILES/profiles.ini" ]]; then
+    FF_PROFILE=$(grep -A3 '\[Profile0\]' "$FIREFOX_PROFILES/profiles.ini" | grep '^Path=' | cut -d= -f2)
+    if [[ -n "$FF_PROFILE" ]]; then
+        FF_CHROME="$FIREFOX_PROFILES/$FF_PROFILE/chrome"
+        mkdir -p "$FF_CHROME"
+        cp "$DOTFILES/apps/firefox/chrome/userChrome.css" "$FF_CHROME/userChrome.css"
+        cp "$DOTFILES/apps/firefox/chrome/userContent.css" "$FF_CHROME/userContent.css"
+        info "Firefox theme deployed → $FF_CHROME"
+        info "Enable in about:config: toolkit.legacyUserProfileCustomizations.stylesheets = true"
+    fi
+fi
+
+# ── VSCodium theme ─────────────────────────────────────────────────────────────
+
+if command -v codium &>/dev/null; then
+    EXTENSIONS_DIR="$HOME/.vscode-oss/extensions"
+    mkdir -p "$EXTENSIONS_DIR/purple-glass"
+    cp -r "$DOTFILES/theme/vscodium-theme/." "$EXTENSIONS_DIR/purple-glass/"
+    info "VSCodium theme deployed → $EXTENSIONS_DIR/purple-glass"
+    info "Activate via: File → Preferences → Color Theme → Purple Glass"
+elif command -v code &>/dev/null; then
+    EXTENSIONS_DIR="$HOME/.vscode/extensions"
+    mkdir -p "$EXTENSIONS_DIR/purple-glass"
+    cp -r "$DOTFILES/theme/vscodium-theme/." "$EXTENSIONS_DIR/purple-glass/"
+    info "VSCode theme deployed → $EXTENSIONS_DIR/purple-glass"
+    info "Activate via: File → Preferences → Color Theme → Purple Glass"
 fi
 
 # ── System files (require sudo) ────────────────────────────────────────────────
@@ -121,50 +153,17 @@ syslink() {
     info "$dst → $src"
 }
 
-# ── Firefox theme ──────────────────────────────────────────────────────────────
-
-FIREFOX_PROFILES="$HOME/.config/mozilla/firefox"
-if [[ -f "$FIREFOX_PROFILES/profiles.ini" ]]; then
-    # Find the default-release profile path
-    FF_PROFILE=$(grep -A3 '\[Profile0\]' "$FIREFOX_PROFILES/profiles.ini" | grep '^Path=' | cut -d= -f2)
-    if [[ -n "$FF_PROFILE" ]]; then
-        FF_CHROME="$FIREFOX_PROFILES/$FF_PROFILE/chrome"
-        mkdir -p "$FF_CHROME"
-        cp "$DOTFILES/firefox/chrome/userChrome.css" "$FF_CHROME/userChrome.css"
-        cp "$DOTFILES/firefox/chrome/userContent.css" "$FF_CHROME/userContent.css"
-        info "Firefox theme deployed → $FF_CHROME"
-        info "Enable in about:config: toolkit.legacyUserProfileCustomizations.stylesheets = true"
-    fi
-fi
-
-# ── VSCodium theme ─────────────────────────────────────────────────────────────
-
-if command -v codium &>/dev/null; then
-    EXTENSIONS_DIR="$HOME/.vscode-oss/extensions"
-    mkdir -p "$EXTENSIONS_DIR/purple-glass"
-    cp -r "$DOTFILES/vscodium-theme/." "$EXTENSIONS_DIR/purple-glass/"
-    info "VSCodium theme deployed → $EXTENSIONS_DIR/purple-glass"
-    info "Activate via: File → Preferences → Color Theme → Purple Glass"
-elif command -v code &>/dev/null; then
-    EXTENSIONS_DIR="$HOME/.vscode/extensions"
-    mkdir -p "$EXTENSIONS_DIR/purple-glass"
-    cp -r "$DOTFILES/vscodium-theme/." "$EXTENSIONS_DIR/purple-glass/"
-    info "VSCode theme deployed → $EXTENSIONS_DIR/purple-glass"
-    info "Activate via: File → Preferences → Color Theme → Purple Glass"
-fi
-
 echo ""
 echo -e "${GREEN}System config (sudo required):${RESET}"
 
-# ── SDDM ───────────────────────────────────────────────────────────────────────
 if command -v sddm &>/dev/null; then
     sudo mkdir -p /usr/share/sddm/themes/purple-glass
-    sudo cp -r "$DOTFILES/sddm/theme/." /usr/share/sddm/themes/purple-glass/
+    sudo cp -r "$DOTFILES/system/sddm/theme/." /usr/share/sddm/themes/purple-glass/
     sudo sed -i "s|__HOME__|$HOME|g" /usr/share/sddm/themes/purple-glass/theme.conf
     info "/usr/share/sddm/themes/purple-glass → deployed"
 
     sudo mkdir -p /etc/sddm.conf.d
-    syslink "$DOTFILES/sddm/sddm.conf" /etc/sddm.conf.d/purple-glass.conf
+    syslink "$DOTFILES/system/sddm/sddm.conf" /etc/sddm.conf.d/purple-glass.conf
 
     if ! systemctl is-enabled sddm &>/dev/null 2>&1; then
         sudo systemctl enable sddm
