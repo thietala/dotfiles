@@ -86,11 +86,21 @@ info "Kvantum theme set to PurpleGlass"
 # ── Standalone files ───────────────────────────────────────────────────────────
 
 shopt -s nullglob
-for file in "$DOTFILES"/*.conf "$DOTFILES"/*.list "$DOTFILES"/*.ini; do
+for file in "$DOTFILES"/*.conf "$DOTFILES"/*.list "$DOTFILES"/*.ini "$DOTFILES"/*.toml; do
     [[ -f "$file" ]] || continue
     name="$(basename "$file")"
     link "$file" "$CONFIG/$name"
 done
+
+# Starship — add init to .bashrc if not already there
+if command -v starship &>/dev/null; then
+    if ! grep -q "starship init bash" "$HOME/.bashrc" 2>/dev/null; then
+        echo 'eval "$(starship init bash)"' >> "$HOME/.bashrc"
+        info "Starship init added to ~/.bashrc"
+    else
+        skip "Starship already in ~/.bashrc"
+    fi
+fi
 
 # ── System files (require sudo) ────────────────────────────────────────────────
 
