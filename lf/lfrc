@@ -31,7 +31,12 @@ cmd open &{{
             xdg-open "$f" >/dev/null 2>&1 &
             ;;
         text/*|application/json|application/x-sh|inode/x-empty)
-            $EDITOR "$f"
+            lf -remote "send $id \$${EDITOR:-nvim} \"$f\""
+            ;;
+        application/zip|application/x-tar|application/gzip|\
+        application/x-bzip2|application/x-xz|application/x-zstd|\
+        application/x-7z-compressed|application/x-rar|application/vnd.rar)
+            lf -remote "send $id extract"
             ;;
         *)
             xdg-open "$f" >/dev/null 2>&1 &
@@ -39,20 +44,52 @@ cmd open &{{
     esac
 }}
 
-# ── Archive helpers ────────────────────────────────────────────────────────────
+# ── Archive extract (smart: subfolder + conflict prompt) ───────────────────────
 cmd extract ${{
     set -f
-    case "$f" in
-        *.tar.bz2)  tar xjf "$f"     ;;
-        *.tar.gz)   tar xzf "$f"     ;;
-        *.tar.xz)   tar xJf "$f"     ;;
-        *.tar.zst)  tar --zstd -xf "$f" ;;
-        *.tar)      tar xf  "$f"     ;;
-        *.zip)      unzip   "$f"     ;;
-        *.7z)       7z x    "$f"     ;;
-        *.rar)      unrar x "$f"     ;;
-        *) echo "unsupported format" ;;
+    base=$(basename "$f")
+    case "$base" in
+        *.tar.bz2) name="${base%.tar.bz2}" ;;
+        *.tar.gz)  name="${base%.tar.gz}"  ;;
+        *.tar.xz)  name="${base%.tar.xz}"  ;;
+        *.tar.zst) name="${base%.tar.zst}" ;;
+        *.tar)     name="${base%.tar}"     ;;
+        *.zip)     name="${base%.zip}"     ;;
+        *.7z)      name="${base%.7z}"      ;;
+        *.rar)     name="${base%.rar}"     ;;
+        *)
+            lf -remote "send $id echo 'unsupported archive format'"
+            exit 1
+            ;;
     esac
+
+    dest="$name"
+
+    if [ -d "$dest" ]; then
+        printf "'%s' exists — [s]kip / [o]verwrite / new [n]ame? " "$dest"
+        read ans
+        case "$ans" in
+            o|O) rm -rf "$dest" ;;
+            n|N) printf "extract to: "; read dest ;;
+            *)   lf -remote "send $id echo 'skipped'"; exit 0 ;;
+        esac
+    fi
+
+    mkdir -p "$dest"
+
+    case "$f" in
+        *.tar.bz2) tar xjf "$f"         -C "$dest" ;;
+        *.tar.gz)  tar xzf "$f"         -C "$dest" ;;
+        *.tar.xz)  tar xJf "$f"         -C "$dest" ;;
+        *.tar.zst) tar --zstd -xf "$f"  -C "$dest" ;;
+        *.tar)     tar xf  "$f"         -C "$dest" ;;
+        *.zip)     unzip -q "$f"        -d "$dest" ;;
+        *.7z)      7z x "$f" -o"$dest" -y >/dev/null ;;
+        *.rar)     unrar x -y "$f" "$dest/" >/dev/null ;;
+    esac
+
+    lf -remote "send $id cd '$dest'"
+    lf -remote "send $id echo 'extracted → $dest'"
 }}
 
 cmd zip %{{
