@@ -33,12 +33,6 @@ Item {
         font.pixelSize: 14
         Behavior on color { ColorAnimation { duration: 120 } }
 
-        ToolTip {
-            visible: hover.containsMouse
-            text: Qt.formatDateTime(root.now, "ddd dd MMM, HH:mm:ss")
-            font.family: "JetBrainsMono Nerd Font"
-            font.pixelSize: 12
-        }
     }
 
     MouseArea {
