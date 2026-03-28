@@ -169,8 +169,8 @@ Item {
 
     Process {
         id: wallpaperSetProc
-        // command set dynamically
-        command: ["hyprctl", "hyprpaper", "wallpaper", "DP-1,/path/to/img"]
+        // command set dynamically — preloads first, then sets
+        command: ["bash", "-c", "true"]
     }
 
     // ── Toggle processes ──────────────────────────────────────────────────────
@@ -769,8 +769,8 @@ Item {
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
                                     wallpaperSetProc.command = [
-                                        "hyprctl", "hyprpaper", "wallpaper",
-                                        "DP-1," + modelData
+                                        "bash", "-c",
+                                        "$HOME/.config/hypr/set-wallpaper.sh '" + modelData + "'"
                                     ]
                                     wallpaperSetProc.running = true
                                 }

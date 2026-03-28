@@ -111,19 +111,44 @@ cmd trash-empty %{{
 }}
 
 # ── Paste with progress ────────────────────────────────────────────────────────
+cmd cancel-paste &{{
+    pkill -f "rsync.*--progress" 2>/dev/null && lf -remote "send $id echo 'transfer cancelled'" || lf -remote "send $id echo 'nothing to cancel'"
+}}
+
 cmd paste-progress &{{
-    load=$(lf -remote 'load')
-    mode=$(echo "$load" | sed -n '1p')
-    list=$(echo "$load" | sed -n '2,$p')
+    reg="$HOME/.local/share/lf/files"
+    [ -f "$reg" ] || { lf -remote "send $id echo 'nothing to paste'"; exit; }
+    mode=$(sed -n '1p' "$reg")
+    readarray -t files < <(sed -n '2,$p' "$reg")
     if [ "$mode" = "copy" ]; then
-        rsync --progress -av $list . 2>&1 | tail -1 &&
-        lf -remote "send $id echo 'copied'"
+        current=""
+        rsync --progress -av "${files[@]}" . 2>&1 | stdbuf -oL tr '\r' '\n' | while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            if echo "$line" | grep -qE '^[^[:space:]].+' && \
+               ! echo "$line" | grep -qE '^(sending|building|created|sent|total)'; then
+                current=$(basename "$line")
+            elif echo "$line" | grep -qE '[0-9]+%.*[0-9]+(\.[0-9]+)?[kMG]B/s'; then
+                    pct=$(echo "$line" | grep -oE '[0-9]+%'                    | tail -1)
+                    spd=$(echo "$line" | grep -oE '[0-9]+(\.[0-9]+)?[kMG]B/s' | tail -1)
+                    raw=$(echo "$line" | grep -oE '[0-9,]+'                    | head -1 | tr -d ',')
+                    if   [ "$raw" -ge 1073741824 ] 2>/dev/null; then size=$(awk "BEGIN{printf \"%.1fGB\",$raw/1073741824}")
+                    elif [ "$raw" -ge 1048576    ] 2>/dev/null; then size=$(awk "BEGIN{printf \"%.1fMB\",$raw/1048576}")
+                    elif [ "$raw" -ge 1024        ] 2>/dev/null; then size=$(awk "BEGIN{printf \"%.0fKB\",$raw/1024}")
+                    else size="${raw}B"; fi
+                    lf -remote "send $id set rulerfmt ' $current  $pct  $size  $spd'"
+            fi
+        done
+        lf -remote "send $id set rulerfmt ' ✓ copy done'"
+        sleep 3
+        lf -remote "send $id set rulerfmt ''"
     else
-        mv $list . &&
-        lf -remote "send $id echo 'moved'"
+        mv "${files[@]}" . &&
+        lf -remote "send $id set rulerfmt ' ✓ moved'"
+        sleep 3
+        lf -remote "send $id set rulerfmt ''"
     fi
-    lf -remote 'send load'
-    lf -remote 'send clear'
+    lf -remote "send $id reload"
+    lf -remote "send $id unselect"
 }}
 
 # ── Bulk rename ───────────────────────────────────────────────────────────────
@@ -169,6 +194,7 @@ map <enter> open
 map x       cut
 map y       copy
 map p       paste-progress
+map P       cancel-paste
 map d       trash
 map D       trash-empty
 map r       rename

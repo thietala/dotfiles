@@ -1,12 +1,13 @@
 /* ── Purple Glass — userChrome.css ──────────────────────────────────────────
    Enable in about:config:
    toolkit.legacyUserProfileCustomizations.stylesheets = true
+   widget.transparent-windows = true   ← required for glass effect
    ────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  --bg:         #1a0e38;
-  --surface:    #231248;
-  --surface2:   #2c1558;
+  --bg:         rgba(26,  14,  56,  0.82);
+  --surface:    rgba(35,  18,  72,  0.65);
+  --surface2:   rgba(44,  21,  88,  0.72);
   --primary:    #9b7bc4;
   --text:       #e8e0f0;
   --text-muted: #8878a8;
@@ -38,19 +39,42 @@
 }
 
 /* ── Window / chrome background ─────────────────────────────────────────── */
-#browser,
-#navigator-toolbox,
+
+/* Single glass container for the entire top chrome */
+#navigator-toolbox {
+  -moz-appearance: none !important;
+  background-color: var(--bg) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* All toolbar children transparent — let the toolbox glass show through */
 #TabsToolbar,
 #nav-bar,
 #PersonalToolbar,
+#toolbar-menubar {
+  -moz-appearance: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Subtle dividers between sections */
+#nav-bar      { border-top: 1px solid var(--border) !important; }
+#PersonalToolbar { border-top: 1px solid var(--border) !important; }
+
+/* Webpage content — solid, no bleed-through */
+#browser,
+#tabbrowser-tabpanels,
+.browserStack {
+  background-color: #1a0e38 !important;
+}
+
+/* Sidebar */
 #sidebar-box {
+  -moz-appearance: none !important;
   background-color: var(--bg) !important;
   border-color: var(--border) !important;
 }
-
-/* Remove default borders between toolbar sections */
-#nav-bar { box-shadow: none !important; border-top: 1px solid var(--border) !important; }
-#TabsToolbar { border-bottom: 1px solid var(--border) !important; }
 
 /* ── Tabs ────────────────────────────────────────────────────────────────── */
 .tabbrowser-tab {
@@ -228,15 +252,22 @@ menuseparator {
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
+#sidebar-box {
+  -moz-appearance: none !important;
+  background-color: var(--bg) !important;
+  border-color: var(--border) !important;
+}
+
 #sidebar-header {
-  background-color: var(--bg)     !important;
+  -moz-appearance: none !important;
+  background-color: transparent !important;
   border-bottom: 1px solid var(--border) !important;
-  color: var(--text-muted)        !important;
+  color: var(--text-muted) !important;
 }
 
 #sidebar {
-  background-color: var(--bg) !important;
-  color: var(--text)          !important;
+  background-color: transparent !important;
+  color: var(--text) !important;
 }
 
 /* ── Letterbox (privacy.resistFingerprinting.letterboxing) ──────────────── */

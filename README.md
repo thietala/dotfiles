@@ -23,7 +23,7 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | `hyprland` | Wayland compositor |
 | `hyprlock` | Lock screen |
 | `hypridle` | Idle daemon |
-| `hyprpaper` | Wallpaper daemon |
+| `awww` | Wallpaper daemon — replaces hyprpaper, used for transitions and control center switching |
 | `quickshell` | Top bar — workspaces, clock, MPRIS, audio, bluetooth, tray, control center |
 | `kitty` | Terminal emulator |
 | `rofi-wayland` | App launcher (compact + sidebar modes) |
@@ -76,6 +76,9 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 | Package | Purpose |
 |---|---|
 | `lf` | Terminal file manager |
+| `ffmpeg` | Required by `set-wallpaper.sh` for image dimension detection (`ffprobe`) |
+| `btop` | Resource monitor |
+| `starship` | Shell prompt (init added to `~/.bashrc` by install.sh) |
 | `grim` + `slurp` | Screenshots |
 | `playerctl` | MPRIS media control |
 | `blueman` | Bluetooth manager |
@@ -86,24 +89,43 @@ Symlinks configs into `~/.config/`, deploys the SDDM theme to `/usr/share/sddm/t
 
 ## What's included
 
+### compositor/
+
 | Config | Description |
 |---|---|
 | `hypr/` | Hyprland, hyprlock, hypridle, hyprpaper |
 | `quickshell/` | Top bar — workspace dots, clock, MPRIS player, network traffic, audio, bluetooth, tray, power; Control Center panel (Super+D) |
-| `kitty/` | Terminal — purple glass theme, 50% opacity |
 | `rofi/` | App launchers — compact center modal (`Super+R`) and sidebar grid (`Super+Shift+R`) |
-| `swaync/` | Notification center — purple glass CSS theme |
-| `sddm/` | Login screen — custom QML theme with clock, animations, purple glass card |
 | `wlogout/` | Power menu — lock, logout, suspend, hibernate, reboot, shutdown |
+
+### apps/
+
+| Config | Description |
+|---|---|
+| `btop/` | Resource monitor — purple glass theme |
+| `firefox/` | `userChrome.css` + `userContent.css` — full purple glass browser UI |
+| `kitty/` | Terminal — purple glass theme, 50% opacity |
+| `lf/` | Terminal file manager with image/video/PDF preview and smart archive extraction |
+| `swaync/` | Notification center — purple glass CSS theme |
+
+### theme/
+
+| Config | Description |
+|---|---|
 | `gtk-3.0/` | GTK3 theme overrides — purple glass colors on top of adw-gtk3-dark |
 | `gtk-4.0/` | GTK4 theme overrides |
 | `kdeglobals/` | KDE color scheme for Qt/KDE apps (Gwenview, Okular, etc.) |
 | `qt6ct/` | Qt6 font, style (Fusion) and color palette with QSS overrides |
 | `Kvantum/` | Kvantum purple glass theme — SVG + color config |
 | `color-schemes/` | KDE `.colors` file for KColorScheme integration |
-| `firefox/` | `userChrome.css` + `userContent.css` — full purple glass browser UI |
 | `vscodium-theme/` | VSCodium/VSCode extension — Purple Glass color theme |
-| `lf/` | Terminal file manager with image/video/PDF preview |
+
+### system/
+
+| Config | Description |
+|---|---|
+| `sddm/` | Login screen — custom QML theme with clock, animations, purple glass card |
+| `starship.toml` | Shell prompt — directory, git branch, command status |
 | `xdg-desktop-portal/` | Portal config for Hyprland |
 | `mimeapps.list` | Default app associations |
 
@@ -147,4 +169,5 @@ Blur is applied to the bar, control center, and rofi via Hyprland `layerrule`. W
 ### After install
 
 1. Enable `toolkit.legacyUserProfileCustomizations.stylesheets` in Firefox `about:config` for userChrome.css to apply
-2. In VSCodium: **File → Preferences → Color Theme → Purple Glass**
+2. Enable `widget.transparent-windows` in Firefox `about:config` for the glass effect on the toolbar/tabs
+3. In VSCodium: **File → Preferences → Color Theme → Purple Glass**
